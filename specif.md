@@ -1,5 +1,3 @@
-# Data Viz
-
 ## Project specification
 
 ### Overview
