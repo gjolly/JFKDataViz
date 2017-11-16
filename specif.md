@@ -11,6 +11,10 @@ Two additionnals pannels allow to filter the results :
 * By creation date : Chronological timeline with selectable interval
 * By governmental organisation (FBI,CIA...) : checkboxes
 
+Finally, we might implement a search bar in order to find a specific document by its id or
+a person by its name. This could also be extended to search a specific keyword in the
+document description.
+
 ### Target audience
 Our project targets people willing to analyze data that were pubished by US national archives,
 as it is quite complicated to browse through documents. Indeed nothing is implemented
