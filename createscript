@@ -1,5 +1,6 @@
 CREATE CONSTRAINT ON (a:Agency) ASSERT a.name IS UNIQUE;
 CREATE CONSTRAINT ON (d:Document) ASSERT d.id IS UNIQUE;
+CREATE CONSTRAINT ON (p:People) ASSERT p.name IS UNIQUE;
 
 LOAD CSV WITH HEADERS
 FROM "file:///data.csv" AS line
@@ -8,8 +9,24 @@ WITH line, SPLIT(line.`Doc Date`, '/') AS docdate
 CREATE (document:Document {id :line.`ID`})
 SET document.year = TOINT(docdate[2]),
     document.month = TOINT(docdate[1]),
-    document.day = TOINT(docdate[0])
+    document.day = TOINT(docdate[0]),
+    document.fileName = line.`File Name`,
+    document.recordNumber = line.`Record Num`,
+    document.type = line.`Doc Type`,
+    document.fileNum = line.`File Num`,
+    document.title = line.`Title`,
+    document.pageNumber = line.`Num Pages`,
+    document.recodSerie = line.`Record Series`,
+    document.comments = line.`Comments`,
+    document.pageReleased = line.`Pages Released`
 
 MERGE (agency:Agency {name: UPPER(line.Agency)})
+MERGE (originator:Agency {name: UPPER(line.Originator)})
+MERGE (from:People {name: UPPER(line.`From Name`)})
+MERGE (to:People {name: UPPER(line.`To Name`)})
+
 CREATE (document)-[:EMITTED]->(agency)
+CREATE (document)-[:REQUIRED]->(originator)
+CREATE (document)-[:CREATED]->(from)
+CREATE (document)-[:RECEIVED]->(to)
 ;
