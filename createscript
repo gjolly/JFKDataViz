@@ -1,0 +1,15 @@
+CREATE CONSTRAINT ON (a:Agency) ASSERT a.name IS UNIQUE;
+CREATE CONSTRAINT ON (d:Document) ASSERT d.id IS UNIQUE;
+
+LOAD CSV WITH HEADERS
+FROM "file:///data.csv" AS line
+WITH line, SPLIT(line.`Doc Date`, '/') AS docdate
+
+CREATE (document:Document {id :line.`ID`})
+SET document.year = TOINT(docdate[2]),
+    document.month = TOINT(docdate[1]),
+    document.day = TOINT(docdate[0])
+
+MERGE (agency:Agency {name: UPPER(line.Agency)})
+CREATE (document)-[:EMITTED]->(agency)
+;
