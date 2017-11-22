@@ -6,7 +6,15 @@ LOAD CSV WITH HEADERS
 FROM "file:///data.csv" AS line
 WITH line, SPLIT(line.`Doc Date`, '/') AS docdate
 
-CREATE (document:Document {id :line.`ID`})
+
+//MERGE (agency:Agency {name: UPPER(line.Agency)})
+//MERGE (originator:Agency {name: UPPER(line.Originator)})
+MERGE (from:People {name: UPPER(line.`From Name`)})
+MERGE (to:People {name: UPPER(line.`To Name`)})
+SET from.agency = line.Originator
+SET to.agency= line.Agency
+
+CREATE (from)-[document:SENDTO]->(to)
 SET document.year = TOINT(docdate[2]),
     document.month = TOINT(docdate[1]),
     document.day = TOINT(docdate[0]),
@@ -19,14 +27,9 @@ SET document.year = TOINT(docdate[2]),
     document.recodSerie = line.`Record Series`,
     document.comments = line.`Comments`,
     document.pageReleased = line.`Pages Released`
-
-MERGE (agency:Agency {name: UPPER(line.Agency)})
-MERGE (originator:Agency {name: UPPER(line.Originator)})
-MERGE (from:People {name: UPPER(line.`From Name`)})
-MERGE (to:People {name: UPPER(line.`To Name`)})
-
-CREATE (document)-[:EMITTED]->(agency)
-CREATE (document)-[:REQUIRED]->(originator)
-CREATE (document)-[:CREATED]->(from)
-CREATE (document)-[:RECEIVED]->(to)
 ;
+//Exemple de requete :
+//MATCH (p1:People)-[doc:SENDTO]->(p2:People)
+//WHERE doc.day = 4
+//RETURN p1,p2
+//LIMIT 15
