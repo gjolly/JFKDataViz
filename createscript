@@ -3,14 +3,14 @@ CREATE CONSTRAINT ON (d:Document) ASSERT d.id IS UNIQUE;
 CREATE CONSTRAINT ON (p:People) ASSERT p.name IS UNIQUE;
 
 LOAD CSV WITH HEADERS
-FROM "file:///data.csv" AS line
+FROM "file:///data_treated.csv" AS line
 WITH line, SPLIT(line.`Doc Date`, '/') AS docdate
 
 
 //MERGE (agency:Agency {name: UPPER(line.Agency)})
 //MERGE (originator:Agency {name: UPPER(line.Originator)})
 MERGE (from:People {name: UPPER(line.`From Name`)})
-MERGE (to:People {name: UPPER(line.`To Name`)})
+MERGE (to:People {name: UPPER(line.`To`)})
 SET from.agency = line.Originator
 SET to.agency= line.Agency
 

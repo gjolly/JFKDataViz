@@ -1,9 +1,21 @@
 import pandas as pd
+import numpy as np
 
 df = pd.read_csv("data.csv")
-to = df["To Name"].str.lower()
+df = df.rename(columns={"To Name": "To"})
+actual_col = df.columns
+df = (df['To'].str.split('/', expand=True)
+      .stack()
+      .reset_index(level=0)
+      .set_index('level_0')
+      .rename(columns={0: 'To'})
+      .join(df.drop('To', 1), how='left')
+      )
+df = df[actual_col]
+df.head(5)
+to = df["To"].str.lower()
 len(to.groupby(to))  # 3461
-symbol = '|'.join(['\,', '\.', '\/', '\&', '\:', '\;'])
+symbol = '|'.join(['\,', '\.', '\:', '\;'])
 to = to.str.replace(symbol, " ").str.replace('\s+', ' ')
 len(to.groupby(to))  # 3275
 stop_words = '|'.join(['to ', 'the ', 'of ', 'for '])
@@ -22,11 +34,13 @@ syno['cia'] = '|'.join(['central intelligence', 'central intelligence agency'])
 for i in syno:
     to = to.str.replace(syno[i], i)
 len(to.groupby(to))
-df['To Name'] = to
+to = to.str.replace("^.{1}$", 'none')
+len(to.groupby(to))
+df['To'] = to
 
 from_ = df["From Name"].str.lower()
-len(to.groupby(from_))  # 4122
-symbol = '|'.join(['\,', '\.', '\/', '\&', '\:', '\;'])
+len(from_.groupby(from_))  # 4122
+symbol = '|'.join(['\,', '\.', '\:', '\;'])
 from_ = from_.str.replace(symbol, " ").str.replace('\s+', ' ')
 len(from_.groupby(from_))  # 3923
 stop_words = '|'.join(['to ', 'the ', 'of ', 'for '])
@@ -36,7 +50,7 @@ temp = from_.str.contains('\(', na=False)
 from_ = from_.str.replace('\(.*\)', '').str.replace('\s+', ' ')
 from_ = from_.str.replace('\[.*\]', '').str.replace('\s+', ' ')
 from_ = from_.str.replace('\(.*$', '').str.replace('\s+', ' ')
-len(from_.groupby(from_))  # 3893
+len(from_.groupby(from_))  # 38
 from_ = from_.replace('', 'none')
 syno = {}
 syno['fbi'] = '|'.join(['federal bureau', 'federal bureau investi',
@@ -47,4 +61,4 @@ for i in syno:
 len(from_.groupby(from_))
 df["From Name"] = from_
 
-df.to_csv("data_treated.csv")
+df.to_csv("data_treated.csv", index=False)
