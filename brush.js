@@ -8,13 +8,13 @@ var x = d3.scaleTime()
     .domain([new Date(1944, 0,0), new Date(1974, 0, 0) - 1])
     .rangeRound([0, width]);
 
-var svg = d3.select("body").append("svg")
+var svg2 = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-svg.append("g")
+svg2.append("g")
     .attr("class", "axis axis--grid")
     .attr("transform", "translate(0," + height + ")")
     .call(d3.axisBottom(x)
@@ -24,7 +24,7 @@ svg.append("g")
   .selectAll(".tick")
     .classed("tick--minor", function(d) { return d.getYear(); })
 
-svg.append("g")
+svg2.append("g")
     .attr("class", "axis axis--x")
     .attr("transform", "translate(0," + height + ")")
     .call(d3.axisBottom(x)
@@ -34,7 +34,7 @@ svg.append("g")
   .selectAll("text")
     .attr("x", 1);
 
-svg.append("g")
+svg2.append("g")
     .attr("class", "brush")
     .call(d3.brushX()
         .extent([[0, 0], [width, height]])

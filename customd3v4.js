@@ -55,7 +55,7 @@ function showGraph(graph) {
       .on("drag", dragged)
       .on("end", dragended));
 
-  var label = svg.selectAll(".mytext")
+  var label = g.selectAll(".mytext")
     .data(graph.nodes)
     .enter()
     .append("text")
