@@ -19,10 +19,26 @@ function showGraph(json) {
     .links(json.links)
     .start();
 
+  svg.append("svg:defs").selectAll("marker")
+    .data(["SENDTO"])
+    .enter().append("svg:marker")
+    .attr("id", String)
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 15)
+    .attr("refY", -1.5)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+    .append("svg:path")
+    .attr("d", "M0,-5L10,0L0,5");
+
   var link = svg.selectAll(".link")
     .data(json.links)
     .enter().append("path")
-    .attr("class", "link");
+    .attr("class", "link")
+    .attr("marker-end", function(d) {
+      return "url(#" + d.type + ")";
+    });
 
   var node = svg.selectAll(".node")
     .data(json.nodes)
@@ -44,9 +60,15 @@ function showGraph(json) {
     link.attr("d", function(d) {
       let dx = d.target.x - d.source.x,
         dy = d.target.y - d.source.y,
-        dr = Math.sqrt(dx * dx + dy * dy) / (1 + (1 / 15) * (d.linkid))
-
-      return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+        dr = Math.sqrt(dx * dx + dy * dy) / (1 + (1 / 15) * (d.linkid)),
+        mx = d.source.x + dx,
+        my = d.source.y + dy;
+      return [
+        "M", d.source.x, d.source.y,
+        "A", dr, dr, 0, 0, 1, mx, my,
+        "A", dr, dr, 0, 0, 1, d.target.x, d.target.y
+      ].join(" ");
+      //return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
     });
 
     node.attr("transform", function(d) {
