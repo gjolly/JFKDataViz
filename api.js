@@ -5,7 +5,7 @@ let data = JSON.stringify({
     "statement": "MATCH (p1:People)-[doc:SENDTO]->(p2:People)\
   WHERE doc.day = 4\
   RETURN p1,p2,doc\
-  LIMIT 15",
+  LIMIT 50",
     "resultDataContents": ["graph"]
   }]
 })
@@ -58,7 +58,7 @@ fetch(url, fetchData).then(r => r.json())
         row.graph.nodes.forEach(function(n) {
           if (idIndex(nodes, n.id) == null)
             nodes.push({
-              id: n.id,
+              id: n.id.toString(),
               label: n.labels[0],
               title: n.properties.name,
               properties : n.properties
@@ -66,14 +66,17 @@ fetch(url, fetchData).then(r => r.json())
         });
         links = links.concat(row.graph.relationships.map(function(r) {
           return {
-            source: idIndex(nodes, r.startNode),
-            target: idIndex(nodes, r.endNode),
+            // source: idIndex(nodes, r.startNode.toString()),
+            // target: idIndex(nodes, r.endNode.toString()),
+            source: r.startNode.toString(),
+            target: r.endNode.toString(),
             type: r.type,
             properties : r.properties
           };
         }));
       });
       let linkid=1
+
       for (l of links){
         l['linkid']=linkid++
       }
