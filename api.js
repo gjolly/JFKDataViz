@@ -73,6 +73,10 @@ fetch(url, fetchData).then(r => r.json())
           };
         }));
       });
+      let linkid=1
+      for (l of links){
+        l['linkid']=linkid++
+      }
       viz = {
         nodes: nodes,
         links: links
