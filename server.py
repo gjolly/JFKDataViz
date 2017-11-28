@@ -10,6 +10,12 @@ from requests.auth import HTTPBasicAuth
 
 class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
 
+    def do_OPTIONS(self):
+        self.send_response(200, "ok")
+        self.send_header('Access-Control-Allow-Origin',
+                         self.headers.dict['origin'])
+        self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
+
     # GET
     def do_GET(self):
         self.send_response(401)
