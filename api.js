@@ -1,4 +1,4 @@
-const url = 'http://localhost:7474/db/data/transaction/commit ';
+const url = 'http://localhost:7474/';
 //I can't manage to use params here
 let data = JSON.stringify({
   "statements": [{
