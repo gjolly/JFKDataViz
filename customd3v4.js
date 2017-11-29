@@ -3,7 +3,7 @@ function showGraph(graph) {
   var width = window.innerWidth,
     height = window.innerHeight
 
-  var svg = d3.select("body").append("svg")
+  var svg = d3.select("#svgA").append("svg")
     .attr("width", width)
     .attr("height", height);
 

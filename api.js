@@ -5,13 +5,13 @@ let data = JSON.stringify({
     "statement": "MATCH (p1:People)-[doc:SENDTO]->(p2:People)\
   WHERE doc.day = 4\
   RETURN p1,p2,doc\
-  LIMIT 50",
+  LIMIT 50;",
     "resultDataContents": ["graph"]
   }]
 })
 
 //I also tried with that but the i can not manage to get the good result graph format
-// const url = 'http://localhost:7474/db/data/cypher';
+// const url = 'http://dataviz.gauthierjolly.com:8080/db/data/cypher';
 // // The data we are going to send in our request
 // let data = JSON.stringify({
 //   "query": "MATCH (p1:People)-[doc:SENDTO]->(p2:People)\
@@ -27,7 +27,7 @@ let fetchData = {
   body: data,
   headers: new Headers()
 }
-fetchData.headers.append('Content-Type', 'application/json; charset=UTF-8; stream=true');
+fetchData.headers.append('Content-Type', 'text/plain; charset=UTF-8');
 //TODO : Use the stream property to speed up
 fetch(url, fetchData).then(r => r.json())
   .then(function(data) {

@@ -11,10 +11,13 @@ from requests.auth import HTTPBasicAuth
 class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
 
     def do_OPTIONS(self):
-        self.send_response(200, "ok")
-        self.send_header('Access-Control-Allow-Origin',
-                         self.headers.dict['origin'])
-        self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Origin', '*')                
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header("Access-Control-Allow-Headers", "X-Requested-With")
+        self.send_response(200, "ok")       
+        self.end_headers()
+        print("OPTION")
+        #self.wfile.write(b'')
 
     # GET
     def do_GET(self):
@@ -24,22 +27,24 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
 
-        contentLen = int(self.headers.getheaders('content-length'))
+        contentLen = int(self.headers['content-length'])
         contentRaw = self.rfile.read(contentLen)
-        data = json.loads(contentRaw)
+        data = contentRaw.decode()
 
-        r = requests.post('http://localhost:7474/db/data/transaction/commit ',
+        print('Request: ' + data)
+        r = requests.post('http://127.0.0.1:7474/db/data/transaction/commit',
                           data=data, auth=HTTPBasicAuth('neo4j', 'PASSWORD'))
-        print(r.text)
 
         # Send response status code
         self.send_response(200)
 
         # Send headers
+        self.send_header('Access-Control-Allow-Origin', '*')                
         self.send_header('Content-type', 'application/json')
         self.end_headers()
-
-        self.wfile.write(r.text)
+        
+        print('Response: ' + r.text)
+        self.wfile.write(r.text.encode())
         # # Send message back to client
         # message = "Hello world!"
         # # Write content as utf-8 data
