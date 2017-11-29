@@ -1,11 +1,11 @@
-const url = 'http://localhost:7474/';
+const url = 'http://localhost:7474/db/data/transaction/commit';
 //I can't manage to use params here
 let data = JSON.stringify({
   "statements": [{
     "statement": "MATCH (p1:People)-[doc:SENDTO]->(p2:People)\
   WHERE doc.day = 4\
   RETURN p1,p2,doc\
-  LIMIT 50;",
+  LIMIT 500;",
     "resultDataContents": ["graph"]
   }]
 })
@@ -27,8 +27,7 @@ let fetchData = {
   body: data,
   headers: new Headers()
 }
-fetchData.headers.append('Content-Type', 'text/plain; charset=UTF-8');
-//TODO : Use the stream property to speed up
+fetchData.headers.append('Content-Type', 'application/json; charset=UTF-8');
 fetch(url, fetchData).then(r => r.json())
   .then(function(data) {
     console.log(data)

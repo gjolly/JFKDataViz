@@ -3,11 +3,17 @@
   stroke: none;
 }
 
-.axis--x .domain,
-.axis--grid .tick line {
+.axis--x .domain, .axis--grid .tick line {
   stroke: #3b4b72;
 }
 
 .axis--grid .tick--minor line {
   stroke-opacity: .5;
+}
+
+#svgB {
+  position: fixed;
+  bottom: 0;
+  margin: auto;
+  left: 5%;
 }

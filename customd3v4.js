@@ -4,8 +4,8 @@ function showGraph(graph) {
     height = window.innerHeight
 
   var svg = d3.select("#svgA").append("svg")
-    .attr("width", width)
-    .attr("height", height);
+    .attr("width", "100%")
+    .attr("height", "100%");
 
   var zoom_handler = d3.zoom()
     .on("zoom", zoom_actions);
@@ -73,7 +73,10 @@ function showGraph(graph) {
 
   simulation.force("link")
     .links(graph.links)
-    .distance(500);
+    .distance((width*width+height*height)/30000);
+
+    resize();
+    d3.select(window).on("resize", resize);
 
   function ticked() {
     link.attr("d", function(d) {
@@ -124,8 +127,8 @@ function showGraph(graph) {
 
   function dragended(d) {
     if (!d3.event.active) simulation.alphaTarget(0);
-    d.fx = null;
-    d.fy = null;
+    // d.fx = null;
+    // d.fy = null;
   }
 
 
@@ -183,4 +186,12 @@ function showGraph(graph) {
       .style("opacity", 0);
     link.style('stroke-width', 2);
   });
+  function resize() {
+    width = window.innerWidth, height = window.innerHeight;
+    g.attr("width", width).attr("height", height);
+    simulation.force("center")
+      .x(width / 2)
+      .y(height / 2);
+    simulation.restart();
+  }
 }

@@ -38,3 +38,12 @@ circle{
   stroke-width: 3px;
   fill: #555;
 }
+
+#svgA {
+  position: fixed;
+  top: 0;
+  margin: auto;
+  width: 90%;
+  height: 90%;
+  left: 5%;
+}
