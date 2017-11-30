@@ -3,15 +3,15 @@
   fill: none;
 }
 
-.node text {
+.everything text {
   stroke: #333;
-  cursos: pointer;
+  cursor: pointer;
 }
 
-.node circle {
+.nodes circle {
   stroke: #fff;
   stroke-width: 3px;
-  fill: #555;
+  fill: #888;
 }
 
 div.tooltip {
@@ -28,16 +28,12 @@ div.tooltip {
 }
 
 .links path {
-  stroke: #999;
+  stroke: #aaa;
   stroke-opacity: 0.6;
+  stroke-width: 5px;
   fill:none
 }
 
-circle{
-  stroke: #fff;
-  stroke-width: 3px;
-  fill: #555;
-}
 
 #svgA {
   position: fixed;

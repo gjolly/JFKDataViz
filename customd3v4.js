@@ -1,4 +1,13 @@
 function showGraph(graph) {
+  var linkedByIndex = {};
+  graph.links.forEach(function(d) {
+    linkedByIndex[d.source + "," + d.target] = true;
+  });
+
+  function isConnected(a, b) {
+    return linkedByIndex[a.id + "," + b.id] || linkedByIndex[b.id + "," + a.id] || a.id == b.id;
+  }
+
   console.log(JSON.stringify(graph))
   var width = window.innerWidth,
     height = window.innerHeight
@@ -21,6 +30,7 @@ function showGraph(graph) {
       return d.id;
     }))
     .force("charge", d3.forceManyBody())
+    .force("collide", d3.forceCollide(50))
     .force("center", d3.forceCenter(width / 2, height / 2));
   svg.append("svg:defs").selectAll("marker")
     .data(["SENDTO"])
@@ -49,7 +59,7 @@ function showGraph(graph) {
     .selectAll("circle")
     .data(graph.nodes)
     .enter().append("circle")
-    .attr("r", 5)
+    .attr("r", 30)
     .call(d3.drag()
       .on("start", dragstarted)
       .on("drag", dragged)
@@ -60,12 +70,14 @@ function showGraph(graph) {
     .enter()
     .append("text")
     .text(function(d) {
-      return d.title;
+      return d.title.split(' ').join('\n');
     })
     .style("text-anchor", "middle")
     .style("fill", "#555")
     .style("font-family", "Arial")
     .style("font-size", 12);
+
+    //label.call(wrap, 30);
 
   simulation
     .nodes(graph.nodes)
@@ -73,10 +85,10 @@ function showGraph(graph) {
 
   simulation.force("link")
     .links(graph.links)
-    .distance((width*width+height*height)/30000);
+    .distance((width * width + height * height) / 30000);
 
-    resize();
-    d3.select(window).on("resize", resize);
+  resize();
+  d3.select(window).on("resize", resize);
 
   function ticked() {
     link.attr("d", function(d) {
@@ -110,8 +122,9 @@ function showGraph(graph) {
         return d.x;
       })
       .attr("y", function(d) {
-        return d.y - 10;
+        return d.y;
       });
+    //label.call(wrap, 30);
   }
 
   function dragstarted(d) {
@@ -140,7 +153,7 @@ function showGraph(graph) {
       .style("left", (d3.event.pageX) + "px")
       .style("top", (d3.event.pageY - 28) + "px");
     link.style('stroke-width', function(l) {
-      return d.linkid === l.linkid ? 4 : 2
+      return d.linkid === l.linkid ? 7 : 2
     })
     link.style('stroke', function(l) {
       return d.linkid === l.linkid ? "#faa" : "#aaa"
@@ -151,8 +164,7 @@ function showGraph(graph) {
     div.transition()
       .duration(500)
       .style("opacity", 0);
-    link.style('stroke-width', 2);
-    link.style('stroke-width', 2)
+    link.style('stroke-width', 5);
     link.style('stroke', "#aaa")
   });
 
@@ -160,10 +172,17 @@ function showGraph(graph) {
     g.attr("transform", d3.event.transform);
 
   }
-  link.on('click',function(d){
-    window.open("https://www.archives.gov/files/research/jfk/releases/"+d.properties.fileName.toLowerCase());
+  link.on('click', function(d) {
+    window.open("https://www.archives.gov/files/research/jfk/releases/" + d.properties.fileName.toLowerCase());
   })
   node.on('mouseover', function(d) {
+    connectedLinks = []
+    node.style('opacity', function(l) {
+      return isConnected(d, l) ? 1 : 0.4
+    })
+    node.style('stroke', function(l) {
+      return isConnected(d, l) ? "#faa" : "#fff"
+    })
     div.transition()
       .duration(200)
       .style("opacity", .9);
@@ -173,9 +192,15 @@ function showGraph(graph) {
 
     link.style('stroke-width', function(l) {
       if (d === l.source || d === l.target)
-        return 4;
+        return 7;
       else
         return 2;
+    });
+    link.style('stroke', function(l) {
+      if (d === l.source || d === l.target)
+        return "#faa";
+      else
+        return "#aaa";
     });
   });
 
@@ -184,8 +209,12 @@ function showGraph(graph) {
     div.transition()
       .duration(500)
       .style("opacity", 0);
-    link.style('stroke-width', 2);
+    link.style('stroke-width', 5);
+    link.style('stroke', "#aaa");
+    node.style('opacity', 1);
+    node.style("stroke","#fff")
   });
+
   function resize() {
     width = window.innerWidth, height = window.innerHeight;
     g.attr("width", width).attr("height", height);
@@ -193,5 +222,29 @@ function showGraph(graph) {
       .x(width / 2)
       .y(height / 2);
     simulation.restart();
+  }
+
+  function wrap(text, width) {
+    text.each(function() {
+      var text = d3.select(this),
+        words = text.text().split(/\s+/).reverse(),
+        word,
+        line = [],
+        lineNumber = 0,
+        lineHeight = 1.1, // ems
+        y = text.attr("y"),
+        dy = parseFloat(text.attr("dy")),
+        tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+      while (word = words.pop()) {
+        line.push(word);
+        tspan.text(line.join(" "));
+        if (tspan.node().getComputedTextLength() > width) {
+          line.pop();
+          tspan.text(line.join(" "));
+          line = [word];
+          tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+        }
+      }
+    });
   }
 }

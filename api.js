@@ -5,7 +5,7 @@ let data = JSON.stringify({
     "statement": "MATCH (p1:People)-[doc:SENDTO]->(p2:People)\
   WHERE doc.day = 4\
   RETURN p1,p2,doc\
-  LIMIT 500;",
+  LIMIT 50;",
     "resultDataContents": ["graph"]
   }]
 })
