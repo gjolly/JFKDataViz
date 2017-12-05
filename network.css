@@ -34,9 +34,9 @@ div.tooltip {
   fill:none
 }
 
-
 #svgA {
-  top: 0;
+  top: 100;
+  position: fixed;
   margin: auto;
   width: 90%;
   height: 90%;

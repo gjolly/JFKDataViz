@@ -1,5 +1,11 @@
 body {font-family: "Lato", sans-serif;}
 
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
 .tablink {
     background-color: #555;
     color: white;
@@ -18,10 +24,9 @@ body {font-family: "Lato", sans-serif;}
 
 /* Style the tab content */
 .tabcontent {
-    color: white;
-    display: none;
-    padding: 500px;
-    text-align: center;
+    /*color: white;*/
+    padding: 100px;
+    /*text-align: center;*/
 }
 
 #GraphTab {background-color:white;}
