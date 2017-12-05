@@ -16,12 +16,14 @@
     <a href="javascript:void(0)" class="closebtn" onclick="closeList()">&times;</a>
   </div>
   <div id="main">
-    <button class="tablink" onclick="openCity('GraphTab', this, 'red')" id="defaultOpen">Graph</button>
-    <button class="tablink" onclick="openCity('About', this, 'green')">About</button>
+    <div class="navbar">
+      <button class="tablink" onclick="openCity('GraphTab', this, 'red')" id="defaultOpen">Graph</button>
+      <button class="tablink" onclick="openCity('About', this, 'green')">About</button>
+    </div>
+
     <div id="GraphTab" class="tabcontent">
-      <div id='svgA'>
-        <div id="svgB"></div>
-      </div>
+      <div id='svgA'></div>
+      <div id="svgB"></div>
     </div>
 
     <div id="About" class="tabcontent">
