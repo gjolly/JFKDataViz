@@ -1,4 +1,4 @@
-const url = 'http://localhost:7474/db/data/transaction/commit';
+const url = 'http://dataviz.gauthierjolly.com:8080';
 //I can't manage to use params here
 let data = JSON.stringify({
   "statements": [{
@@ -27,7 +27,7 @@ let fetchData = {
   body: data,
   headers: new Headers()
 }
-fetchData.headers.append('Content-Type', 'application/json; charset=UTF-8');
+fetchData.headers.append('Content-Type', 'text/plain; charset=UTF-8');
 fetch(url, fetchData).then(r => r.json())
   .then(function(data) {
     console.log(data)
