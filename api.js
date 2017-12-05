@@ -27,7 +27,7 @@ let fetchData = {
   body: data,
   headers: new Headers()
 }
-fetchData.headers.append('Content-Type', 'text/plain; charset=UTF-8');
+fetchData.headers.append('Content-Type', 'application/json; charset=UTF-8');
 fetch(url, fetchData).then(r => r.json())
   .then(function(data) {
     console.log(data)
