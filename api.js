@@ -84,7 +84,12 @@ fetch(url, fetchData).then(r => r.json())
         links: links
       };
       console.log(viz)
+<<<<<<< HEAD
       showGraph(viz)
+=======
+      showGraph(viz )
+      addElements(viz)
+>>>>>>> 82874c6dfea0e602f15d43ec8d1c20957f8c7d1d
     }
   })
 
