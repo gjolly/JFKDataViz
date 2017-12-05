@@ -85,5 +85,6 @@ fetch(url, fetchData).then(r => r.json())
       };
       console.log(viz)
       showGraph(viz )
+      addElements(viz)
     }
   })

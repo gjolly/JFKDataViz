@@ -1,32 +1,43 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="network.css">
-    <link rel="stylesheet" href="brush.css">
-    <link rel="stylesheet" href="tabs.css">
-    <title>Data Viz</title>
-  </head>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="network.css">
+  <link rel="stylesheet" href="brush.css">
+  <link rel="stylesheet" href="tabs.css">
+  <link rel="stylesheet" href="sideList.css">
+  <title>Data Viz</title>
+</head>
+
 <body>
 
-<button class="tablink" onclick="openCity('GraphTab', this, 'red')" id="defaultOpen">Graph</button>
-<button class="tablink" onclick="openCity('About', this, 'green')">About</button>
-
-<div id="GraphTab" class="tabcontent">
-  <div id='svgA'>
-    <div id="svgB"></div>
+  <div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeList()">&times;</a>
   </div>
-</div>
+  <div id="main">
+    <button class="tablink" onclick="openCity('GraphTab', this, 'red')" id="defaultOpen">Graph</button>
+    <button class="tablink" onclick="openCity('About', this, 'green')">About</button>
+    <div id="GraphTab" class="tabcontent">
+      <div id='svgA'>
+        <div id="svgB"></div>
+      </div>
+    </div>
 
-<div id="About" class="tabcontent">
-</div>
+    <div id="About" class="tabcontent">
+      <p onclick="openList()">
+        Show List
+      </p>
+    </div>
+  </div>
 
 
-
-<script src="http://d3js.org/d3.v4.min.js"></script>
-<script src="api.js"></script>
-<script src="customd3v4.js"></script>
-<script src="brush.js"></script>
-<script src="tabs.js"></script>
+  <script src="http://d3js.org/d3.v4.min.js"></script>
+  <script src="api.js"></script>
+  <script src="customd3v4.js"></script>
+  <script src="brush.js"></script>
+  <script src="tabs.js"></script>
+  <script src="sideList.js"></script>
 </body>
+
 </html>
