@@ -60,7 +60,7 @@ fetch(url, fetchData).then(r => r.json())
               id: n.id.toString(),
               label: n.labels[0],
               title: n.properties.name,
-              properties : n.properties
+              properties: n.properties
             });
         });
         links = links.concat(row.graph.relationships.map(function(r) {
@@ -70,20 +70,33 @@ fetch(url, fetchData).then(r => r.json())
             source: r.startNode.toString(),
             target: r.endNode.toString(),
             type: r.type,
-            properties : r.properties
+            properties: r.properties
           };
         }));
       });
-      let linkid=1
+      let linkid = 1
 
-      for (l of links){
-        l['linkid']=linkid++
+      for (l of links) {
+        l['linkid'] = linkid++
       }
       viz = {
         nodes: nodes,
         links: links
       };
       console.log(viz)
-      showGraph(viz )
+      showGraph(viz)
     }
   })
+
+function newDates(d1, d2) {
+  let data = JSON.stringify({
+    "statements": [{
+      "statement": "MATCH (p1:People)-[doc:SENDTO]->(p2:People)\
+      WHERE doc.year > " +" d1.year"+"\
+      and doc.year > " +" d2.year"+"\
+      RETURN p1,p2,doc\
+      LIMIT 50;",
+      "resultDataContents": ["graph"]
+    }]
+  })
+}
