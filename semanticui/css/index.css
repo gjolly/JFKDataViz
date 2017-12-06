@@ -18,3 +18,11 @@ body.pushable{
   margin: 5em 0em 0em;
   padding: 5em 0em;
 }
+
+#sidebar details{
+  color: white;
+}
+
+#sidebar ul{
+  list-style-type: none;
+}

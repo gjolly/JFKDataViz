@@ -1,49 +1,29 @@
-const url = 'http://dataviz.gauthierjolly.com:8080';
-//I can't manage to use params here
+//const url = 'http://dataviz.gauthierjolly.com:8080';
+const url = 'http://localhost:7474/db/data/transaction/commit';
 let data = JSON.stringify({
   "statements": [{
     "statement": "MATCH (p1:People)-[doc:SENDTO]->(p2:People)\
   WHERE doc.day = 4\
+  AND p2.name <> \"NONE\"\
+  AND p1.name <> \"NONE\"\
   RETURN p1,p2,doc\
-  LIMIT 50;",
+  LIMIT 150;",
     "resultDataContents": ["graph"]
   }]
 })
 
-//I also tried with that but the i can not manage to get the good result graph format
-// const url = 'http://dataviz.gauthierjolly.com:8080/db/data/cypher';
-// // The data we are going to send in our request
-// let data = JSON.stringify({
-//   "query": "MATCH (p1:People)-[doc:SENDTO]->(p2:People)\
-//   WHERE doc.day = { dayDate }\
-//   RETURN p1,p2,doc",
-//   "params": {
-//     "dayDate": 4
-//   },
-// })
 
 let fetchData = {
   method: 'POST',
   body: data,
   headers: new Headers()
 }
-fetchData.headers.append('Content-Type', 'text/plain; charset=UTF-8');
+fetchData.headers.append('Content-Type', 'application/json; charset=UTF-8');
 fetch(url, fetchData).then(r => r.json())
   .then(function(data) {
     console.log(data)
     if (!data["errors"].length) {
       let arrayGraph = data["results"][0]["data"]
-      //TODO make it more efficient
-      // let graph = {
-      //   nodes: [],
-      //   links: []
-      // }
-      // for (i of arrayGraph) {
-      //
-      //   graph["nodes"] = graph["nodes"].concat(i["graph"]["nodes"])
-      //   graph["links"] = graph["links"].concat(i["graph"]["relationships"])
-      // }
-      // console.log(graph)
 
       function idIndex(a, id) {
         for (var i = 0; i < a.length; i++) {
@@ -65,8 +45,6 @@ fetch(url, fetchData).then(r => r.json())
         });
         links = links.concat(row.graph.relationships.map(function(r) {
           return {
-            // source: idIndex(nodes, r.startNode.toString()),
-            // target: idIndex(nodes, r.endNode.toString()),
             source: r.startNode.toString(),
             target: r.endNode.toString(),
             type: r.type,

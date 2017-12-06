@@ -72,7 +72,7 @@ fetch(url, fetchData).then(r => r.json())
             type: r.type,
             properties: r.properties
           };
-        }));
+        }));  
       });
       let linkid = 1
 
