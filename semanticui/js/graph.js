@@ -82,6 +82,28 @@ function showGraph(graph, init = true) {
       return "link" + d.linkid
     })
 
+  function restart() {
+    node = node.data(graph.nodes)
+    node.exit().remove();
+    node = node.enter().append("circle")
+      .attr("r", 20)
+      .call(d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended))
+      .on("mouseover", nodeMouseOver)
+      .on("mouseout", nodeMouseOut)
+      .on("Listmouseover", ListnodeMouseOver)
+      .on("Listmouseout", ListnodeMouseOut)
+      .attr("id", function(d) {
+        return "node" + d.id
+      })
+      .merge(node)
+
+    simulation
+      .nodes(graph.nodes)
+    simulation.alpha(1).restart();
+  }
   var node = g.append("g")
     .attr("class", "nodes")
     .selectAll("circle")
@@ -91,12 +113,14 @@ function showGraph(graph, init = true) {
     .call(d3.drag()
       .on("start", dragstarted)
       .on("drag", dragged)
-      .on("end", dragended));
-
-  node
+      .on("end", dragended))
     .attr("id", function(d) {
       return "node" + d.id
     })
+    .on("mouseover", nodeMouseOver)
+    .on("mouseout", nodeMouseOut)
+    .on("Listmouseover", ListnodeMouseOver)
+    .on("Listmouseout", ListnodeMouseOut)
 
   var label = g.selectAll(".mytext")
     .data(graph.nodes)
@@ -122,6 +146,16 @@ function showGraph(graph, init = true) {
 
   resize(s = false);
   d3.select(window).on("resize", resize);
+  var remNode;
+  d3.timeout(function() {
+    remNode = graph.nodes.pop();
+    restart()
+  }, 2000)
+
+  d3.timeout(function() {
+    graph.nodes.push(remNode);
+    restart()
+  }, 3000)
 
   function ticked() {
     node.attr("transform", function(d) {
@@ -214,7 +248,8 @@ function showGraph(graph, init = true) {
   link.on('click', function(d) {
     window.open("https://www.archives.gov/files/research/jfk/releases/" + d.properties.fileName.toLowerCase());
   })
-  node.on('mouseover', function(d) {
+
+  function nodeMouseOver(d) {
     connectedLinks = []
     node.style('opacity', function(l) {
       return isConnected(d, l) ? 1 : 0.4
@@ -241,10 +276,10 @@ function showGraph(graph, init = true) {
       else
         return "#aaa";
     });
-  });
+  }
 
   // Set the stroke width back to normal when mouse leaves the node.
-  node.on('mouseout', function() {
+  function nodeMouseOut() {
     div.transition()
       .duration(500)
       .style("opacity", 0);
@@ -252,7 +287,21 @@ function showGraph(graph, init = true) {
     link.style('stroke', "#aaa");
     node.style('opacity', 1);
     node.style("stroke", "#fff")
-  });
+  }
+
+  function ListnodeMouseOver(d) {
+    node.style('opacity', function(l) {
+      return d.id == l.id ? 1 : 0.4
+    })
+    node.style('stroke', function(l) {
+      return d.id == l.id ? "#faa" : "#fff"
+    })
+  }
+
+  function ListnodeMouseOut() {
+    node.style('opacity', 1);
+    node.style("stroke", "#fff")
+  }
 
   function resize(s = true) {
     var bounds = g.node().getBBox();
@@ -288,30 +337,6 @@ function showGraph(graph, init = true) {
         .call(zoom_handler.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(1));
       simulation.restart();
     }
-  }
-
-  function wrap(text, width) {
-    text.each(function() {
-      var text = d3.select(this),
-        words = text.text().split(/\s+/).reverse(),
-        word,
-        line = [],
-        lineNumber = 0,
-        lineHeight = 1.1, // ems
-        y = text.attr("y"),
-        dy = parseFloat(text.attr("dy")),
-        tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-      while (word = words.pop()) {
-        line.push(word);
-        tspan.text(line.join(" "));
-        if (tspan.node().getComputedTextLength() > width) {
-          line.pop();
-          tspan.text(line.join(" "));
-          line = [word];
-          tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
-        }
-      }
-    });
   }
 
 }

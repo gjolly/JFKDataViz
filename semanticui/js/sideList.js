@@ -108,14 +108,14 @@ function addText(node, text) {
 
 jQuery.fn.d3Mouseover = function () {
   this.each(function (i, e) {
-    var evt = new MouseEvent("mouseover");
+    var evt = new MouseEvent("Listmouseover");
     e.dispatchEvent(evt);
   });
 };
 
 jQuery.fn.d3Mouseout = function () {
   this.each(function (i, e) {
-    var evt = new MouseEvent("mouseout");
+    var evt = new MouseEvent("Listmouseout");
     e.dispatchEvent(evt);
   });
 };
