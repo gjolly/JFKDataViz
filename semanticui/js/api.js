@@ -62,7 +62,7 @@ fetch(url, fetchData).then(r => r.json())
         links: links
       };
       console.log(viz)
-      showGraph(viz )
+      graphObject.showGraph(viz )
       addElements(viz)
     }
   })
