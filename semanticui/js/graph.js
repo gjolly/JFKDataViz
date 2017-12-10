@@ -132,8 +132,9 @@ graphObject.isConnected = function(a, b) {
 }
 
 graphObject.restart = function() {
-  graphObject.node = graphObject.node.data(graphObject.graph.nodes)
+  graphObject.node = graphObject.node.data([])//If we remove this line id won't be associated to the good object
   graphObject.node.exit().remove();
+  graphObject.node = graphObject.node.data(graphObject.graph.nodes)
   graphObject.node = graphObject.node.enter().append("circle")
     .attr("r", 20)
     .call(d3.drag()
@@ -147,10 +148,40 @@ graphObject.restart = function() {
     .attr("id", function(d) {
       return "node" + d.id
     })
-    .merge(node)
+    .merge(graphObject.node);
 
+  graphObject.label = graphObject.label.data([])
+  graphObject.label.exit().remove();
+  graphObject.label = graphObject.label.data(graphObject.graph.nodes)
+  graphObject.label = graphObject.label.enter()
+    .append("text")
+    .text(function(d) {
+      return d.title.split(' ').join('\n');
+    })
+    .style("text-anchor", "middle")
+    .style("fill", "#555")
+    .style("font-family", "Arial")
+    .style("font-size", 12)
+    .merge(graphObject.label);
+
+  graphObject.link = graphObject.link.data([])
+  graphObject.link.exit().remove();
+  graphObject.link = graphObject.link.data(graphObject.graph.links)
+  graphObject.link = graphObject.link.enter().append("path")
+    .attr("id", function(d) {
+      return "link" + d.linkid
+    })
+    .on("mouseover", linkMouseOver)
+    .on("mouseout", linkMouseOut)
+    .on("Listmouseover", linkMouseOver)
+    .on("Listmouseout", linkMouseOut)
+    .merge(graphObject.link);
   graphObject.simulation
     .nodes(graphObject.graph.nodes)
+  graphObject.simulation.force("link")
+    .links(graphObject.graph.links)
+    .distance(Math.sqrt(d3.select('#svgA').node().clientWidth ** 2 + d3.select('#svgA').node().clientHeight ** 2) / 8);
+
   graphObject.simulation.alpha(1).restart();
 }
 

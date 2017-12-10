@@ -4,6 +4,9 @@ function addElements(elements) {
   addAgencies("Agency")
 }
 
+var listOfRemovedNodes = {}
+var listOfRemovedLinks = {}
+
 function addNodes(nodes) {
   let mainDetails = document.createElement("details");
   let mainSummary = document.createElement("summary");
@@ -11,27 +14,29 @@ function addNodes(nodes) {
   let mainUl = document.createElement("ul");
   for (n of nodes) {
     let liContainer = document.createElement("li");
-    liContainer.setAttribute("id", "listnode"+n.id)
+    liContainer.setAttribute("id", "listnode" + n.id)
     let detailsEl = document.createElement("details");
     let detailSummary = document.createElement("summary");
     let textDetailSummary = document.createTextNode(n.title);
     let textEl = document.createElement("p");
     let textCont = document.createTextNode("Agency : " + n.properties.agency)
     textEl.appendChild(textCont)
-    let buttonShow=document.createElement("button")
-    buttonShow.appendChild(document.createTextNode("Show/Hide"))
+    let buttonShow = document.createElement("button")
+    buttonShow.appendChild(document.createTextNode("Hide"))
+    buttonShow.setAttribute("id", "buttonShowNode" + n.id)
+    buttonShow.onclick = removeNodeFromSideList
     detailSummary.appendChild(textDetailSummary)
     detailsEl.appendChild(detailSummary);
     detailsEl.appendChild(textEl)
     detailsEl.appendChild(buttonShow)
     liContainer.appendChild(detailsEl);
-    liContainer.onmouseover = function(){
+    liContainer.onmouseover = function() {
       let nodeId = this.id.substring(4);
-      $("#"+nodeId).d3Mouseover();
+      $("#" + nodeId).d3Mouseover();
     }
-    liContainer.onmouseout = function(){
+    liContainer.onmouseout = function() {
       let nodeId = this.id.substring(4);
-      $("#"+nodeId).d3Mouseout();
+      $("#" + nodeId).d3Mouseout();
     }
     mainUl.appendChild(liContainer);
   }
@@ -48,7 +53,7 @@ function addDocuments(documents) {
   let mainUl = document.createElement("ul");
   for (n of documents) {
     let liContainer = document.createElement("li");
-    liContainer.setAttribute("id", "listlink"+n.linkid)
+    liContainer.setAttribute("id", "listlink" + n.linkid)
     let detailsEl = document.createElement("details");
     let detailSummary = document.createElement("summary");
     let textDetailSummary = document.createTextNode(n.properties.fileName);
@@ -64,21 +69,23 @@ function addDocuments(documents) {
     if (n.properties.type != "None") cont += "<br>Type  : " + n.properties.type
     // let textCont = document.createTextNode(cont)
     // textEl.appendChild(textCont)
-    addText(textEl,cont)
-    let buttonShow=document.createElement("button")
-    buttonShow.appendChild(document.createTextNode("Show/Hide"))
+    addText(textEl, cont)
+    let buttonShow = document.createElement("button")
+    buttonShow.appendChild(document.createTextNode("Hide"))
+    buttonShow.setAttribute("id", "buttonShowLink" + n.linkid)
+    buttonShow.onclick = removeLinkFromSideList
     detailSummary.appendChild(textDetailSummary)
     detailsEl.appendChild(detailSummary);
     detailsEl.appendChild(textEl)
     detailsEl.appendChild(buttonShow)
     liContainer.appendChild(detailsEl);
-    liContainer.onmouseover = function(){
+    liContainer.onmouseover = function() {
       let linkId = this.id.substring(4);
-      $("#"+linkId).d3Mouseover();
+      $("#" + linkId).d3Mouseover();
     }
-    liContainer.onmouseout = function(){
+    liContainer.onmouseout = function() {
       let linkId = this.id.substring(4);
-      $("#"+linkId).d3Mouseout();
+      $("#" + linkId).d3Mouseout();
     }
     mainUl.appendChild(liContainer);
   }
@@ -106,16 +113,87 @@ function addText(node, text) {
   }
 }
 
-jQuery.fn.d3Mouseover = function () {
-  this.each(function (i, e) {
+jQuery.fn.d3Mouseover = function() {
+  this.each(function(i, e) {
     var evt = new MouseEvent("Listmouseover");
     e.dispatchEvent(evt);
   });
 };
 
-jQuery.fn.d3Mouseout = function () {
-  this.each(function (i, e) {
+jQuery.fn.d3Mouseout = function() {
+  this.each(function(i, e) {
     var evt = new MouseEvent("Listmouseout");
     e.dispatchEvent(evt);
   });
 };
+
+function removeNodeFromSideList() {
+  let button = document.getElementById(this.id);
+  let associatedId = this.id.substring(14);
+  if (associatedId in listOfRemovedNodes) {
+    graphObject.graph.nodes.push(listOfRemovedNodes[associatedId]["Node"])
+    for (let l of listOfRemovedNodes[associatedId]["links"]) {
+      graphObject.graph.links.push(l)
+      let but = document.getElementById("buttonShowLink" + l.linkid)
+      but.innerHTML = "Hide"
+      but.disabled = false
+    }
+    graphObject.restart()
+    button.innerHTML = "Hide"
+    delete listOfRemovedNodes[associatedId]
+  } else {
+    let objToAdd = {}
+    let linkToRemove = []
+    objToAdd["links"] = []
+    for (let l of graphObject.graph.links) {
+      if (l.source.id == associatedId ||  l.target.id == associatedId) {
+        objToAdd["links"].push(l)
+        linkToRemove.push(l.linkid)
+        let but = document.getElementById("buttonShowLink" + l.linkid)
+        but.innerHTML = "Show"
+        but.disabled = true
+      }
+    }
+    for (const [key, l] of Object.entries(listOfRemovedLinks)) {
+      if (l.source.id == associatedId ||  l.target.id == associatedId) {
+        objToAdd["links"].push(l)
+        linkToRemove.push(l.linkid)
+        let but = document.getElementById("buttonShowLink" + l.linkid)
+        but.innerHTML = "Show"
+        but.disabled = true
+        delete listOfRemovedLinks[key]
+      }
+    }
+    graphObject.graph.nodes = graphObject.graph.nodes.filter(function(el) {
+      if (el.id == associatedId) {
+        objToAdd["Node"] = el
+        console.log(el)
+        listOfRemovedNodes[associatedId] = objToAdd
+      }
+      return el.id != associatedId
+    })
+    graphObject.graph.links = graphObject.graph.links.filter(l => !(linkToRemove.includes(l.linkid)))
+    graphObject.restart()
+    button.innerHTML = "Show"
+  }
+}
+
+function removeLinkFromSideList() {
+  let button = document.getElementById(this.id);
+  let associatedId = this.id.substring(14);
+  if (associatedId in listOfRemovedLinks) {
+    graphObject.graph.links.push(listOfRemovedLinks[associatedId])
+    graphObject.restart()
+    button.innerHTML = "Hide"
+    delete listOfRemovedLinks[associatedId]
+  } else {
+    graphObject.graph.links = graphObject.graph.links.filter(function(el) {
+      if (el.linkid == associatedId) {
+        listOfRemovedLinks[associatedId] = el
+      }
+      return el.linkid != associatedId
+    })
+    graphObject.restart()
+    button.innerHTML = "Show"
+  }
+}

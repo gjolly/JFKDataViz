@@ -7,7 +7,7 @@ let data = JSON.stringify({
   AND p2.name <> \"NONE\"\
   AND p1.name <> \"NONE\"\
   RETURN p1,p2,doc\
-  LIMIT 50;",
+  LIMIT 150;",
     "resultDataContents": ["graph"]
   }]
 })
