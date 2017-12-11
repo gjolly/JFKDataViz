@@ -10,3 +10,8 @@ $('.ui.sidebar').sidebar({
 $('#showList').click(function() {
   $('.ui.sidebar').sidebar('toggle');
 });
+
+
+$('#closeSideList').click(function() {
+  $('.ui.sidebar').sidebar('toggle');
+});
