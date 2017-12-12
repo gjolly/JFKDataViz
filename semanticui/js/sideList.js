@@ -8,6 +8,9 @@ var listOfRemovedNodes = {}
 var listOfRemovedLinks = {}
 
 function addNodes(nodes) {
+  if (document.contains(document.getElementById("sidebarPeople"))) {
+    document.getElementById("sidebarPeople").remove();
+  }
   let mainDetails = document.createElement("details");
   let mainSummary = document.createElement("summary");
   let textMainSummary = document.createTextNode("People");
@@ -43,10 +46,14 @@ function addNodes(nodes) {
   mainSummary.appendChild(textMainSummary);
   mainDetails.appendChild(mainSummary);
   mainDetails.appendChild(mainUl);
+  mainDetails.setAttribute("id", "sidebarPeople")
   document.getElementById("sidebar").appendChild(mainDetails);
 }
 
 function addDocuments(documents) {
+  if (document.contains(document.getElementById("sidebarDocument"))) {
+    document.getElementById("sidebarDocument").remove();
+  }
   let mainDetails = document.createElement("details");
   let mainSummary = document.createElement("summary");
   let textMainSummary = document.createTextNode("Documents");
@@ -92,6 +99,7 @@ function addDocuments(documents) {
   mainSummary.appendChild(textMainSummary);
   mainDetails.appendChild(mainSummary);
   mainDetails.appendChild(mainUl);
+  mainDetails.setAttribute("id", "sidebarDocument")
   document.getElementById("sidebar").appendChild(mainDetails);
 }
 
