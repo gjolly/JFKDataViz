@@ -1,4 +1,4 @@
-/*body {
+body {
   background-color: #FFFFFF;
 }
 body.pushable{
@@ -19,13 +19,17 @@ body.pushable{
   padding: 5em 0em;
 }
 
+#sidebar {
+  position: absolute;
+}
+
 #sidebar details{
   color: white;
 }
 
 #sidebar ul{
   list-style-type: none;
-}*/
+}
 
 html,
 body {

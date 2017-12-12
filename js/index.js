@@ -2,7 +2,7 @@ $('.menu .item')
   .tab();
 $('.ui.sidebar').sidebar({
   dimPage: false,
-  transition: 'overlay',
+  transition: 'push',
   exclusive: false,
   closable: false
 });
