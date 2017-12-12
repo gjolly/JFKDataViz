@@ -1,7 +1,11 @@
 function addElements(elements) {
   addNodes(elements.nodes)
   addDocuments(elements.links)
-  addAgencies("Agency")
+  agencies = new Set()
+  for(node of elements.nodes){
+    agencies.add(node["properties"]["agency"])
+  }
+  addAgencies(agencies)
 }
 
 var listOfRemovedNodes = {}
@@ -104,7 +108,42 @@ function addDocuments(documents) {
 }
 
 function addAgencies(agencies) {
-
+  if (document.contains(document.getElementById("sidebarAgency"))) {
+    document.getElementById("sidebarAgency").remove();
+  }
+  let mainDetails = document.createElement("details");
+  let mainSummary = document.createElement("summary");
+  let textMainSummary = document.createTextNode("People");
+  let mainUl = document.createElement("ul");
+  for (ag of agencies) {
+    let liContainer = document.createElement("li");
+    liContainer.setAttribute("id", "listAgency" + ag)
+    let detailsEl = document.createElement("details");
+    let detailSummary = document.createElement("summary");
+    let textDetailSummary = document.createTextNode(ag);
+    let buttonShow = document.createElement("button")
+    buttonShow.appendChild(document.createTextNode("Hide"))
+    buttonShow.setAttribute("id", "buttonShowAgency" + ag)
+    buttonShow.onclick = removeAgencyFromSideList
+    detailSummary.appendChild(textDetailSummary)
+    detailsEl.appendChild(detailSummary);
+    detailsEl.appendChild(buttonShow)
+    liContainer.appendChild(detailsEl);
+    liContainer.onmouseover = function() {
+      let nodeId = this.id.substring(4);
+      $("#" + nodeId).d3Mouseover();
+    }
+    liContainer.onmouseout = function() {
+      let nodeId = this.id.substring(4);
+      $("#" + nodeId).d3Mouseout();
+    }
+    mainUl.appendChild(liContainer);
+  }
+  mainSummary.appendChild(textMainSummary);
+  mainDetails.appendChild(mainSummary);
+  mainDetails.appendChild(mainUl);
+  mainDetails.setAttribute("id", "sidebarAgency")
+  document.getElementById("sidebar").appendChild(mainDetails);
 }
 
 function addText(node, text) {
@@ -204,4 +243,8 @@ function removeLinkFromSideList() {
     graphObject.restart()
     button.innerHTML = "Show"
   }
+}
+
+function removeAgencyFromSideList(){
+  
 }
