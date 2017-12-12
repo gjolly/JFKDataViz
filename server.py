@@ -3,6 +3,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import requests
+import ssl
 from requests.auth import HTTPBasicAuth
 
 # HTTPRequestHandler class
@@ -11,10 +12,10 @@ from requests.auth import HTTPBasicAuth
 class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
 
     def do_OPTIONS(self):
-        self.send_header('Access-Control-Allow-Origin', '*')                
+        self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
         self.send_header("Access-Control-Allow-Headers", "X-Requested-With")
-        self.send_response(200, "ok")       
+        self.send_response(200, "ok")
         self.end_headers()
         print("OPTION")
         #self.wfile.write(b'')
@@ -39,10 +40,10 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         self.send_response(200)
 
         # Send headers
-        self.send_header('Access-Control-Allow-Origin', '*')                
+        self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Content-type', 'application/json')
         self.end_headers()
-        
+
         print('Response: ' + r.text)
         self.wfile.write(r.text.encode())
         # # Send message back to client
@@ -60,6 +61,7 @@ def run():
     # server, you need root access
     server_address = ('', 8080)
     httpd = HTTPServer(server_address, testHTTPServer_RequestHandler)
+    httpd.socket = ssl.wrap_socket(httpd.socket, certfile='/etc/letsencrypt/live/dataviz.gauthierjolly.com/fullchain.pem', server_side=True)
     print('running server...')
     httpd.serve_forever()
 
