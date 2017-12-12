@@ -218,7 +218,8 @@ LIMIT 150;",
         return settings;
       },
       beforeXHR: function(xhr) {
-        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        //xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xhr.setRequestHeader('Content-Type', 'text/plain; charset=UTF-8');
       },
     },
     onSelect: function(result, response) {
