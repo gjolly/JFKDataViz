@@ -1,5 +1,5 @@
 const url = 'https://dataviz.gauthierjolly.com:8080';
-//const url = 'http://localhost:7474/db/data/transaction/commit';
+// const url = 'http://localhost:7474/db/data/transaction/commit';
 let data = JSON.stringify({
   "statements": [{
     "statement": "MATCH (p1:People)-[doc:SENDTO]->(p2:People)\
@@ -19,7 +19,7 @@ function graphFetch(url, data) {
     body: data,
     headers: new Headers()
   }
-  //fetchData.headers.append('Content-Type', 'application/json; charset=UTF-8');
+  // fetchData.headers.append('Content-Type', 'application/json; charset=UTF-8');
   fetchData.headers.append('Content-Type', 'text/plain; charset=UTF-8');
   fetch(url, fetchData).then(r => r.json())
     .then(function(data) {
@@ -34,7 +34,7 @@ function graphFetch(url, data) {
 }
 
 function peopleGraph(peopleName) {
-  //const url = 'http://localhost:7474/db/data/transaction/commit';
+  // const url = 'http://localhost:7474/db/data/transaction/commit';
   const url = "https://dataviz.gauthierjolly.com:8080"
   let data = JSON.stringify({
     "statements": [{
@@ -51,7 +51,7 @@ function peopleGraph(peopleName) {
     body: data,
     headers: new Headers()
   }
-  //fetchData.headers.append('Content-Type', 'application/json; charset=UTF-8');
+  // fetchData.headers.append('Content-Type', 'application/json; charset=UTF-8');
   fetchData.headers.append('Content-Type', 'text/plain; charset=UTF-8');
   fetch(url, fetchData).then(r => r.json())
     .then(function(data) {
@@ -135,7 +135,7 @@ $('#peoplesearch')
         }
         return resp;
       },
-      //url: 'http://localhost:7474/db/data/transaction/commit',
+      // url: 'http://localhost:7474/db/data/transaction/commit',
       url : "https://dataviz.gauthierjolly.com:8080",
       method: 'POST',
       beforeSend: function(settings) {
@@ -151,7 +151,7 @@ $('#peoplesearch')
         return settings;
       },
       beforeXHR: function(xhr) {
-        //xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        // xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
         xhr.setRequestHeader('Content-Type', 'text/plain; charset=UTF-8');
       },
     },
@@ -196,7 +196,7 @@ $('#documentsearch')
         graphObject.restart()
         addElements(viz)
       },
-      //url: 'http://localhost:7474/db/data/transaction/commit',
+      // url: 'http://localhost:7474/db/data/transaction/commit',
       url : "https://dataviz.gauthierjolly.com:8080",
       method: 'POST',
       beforeSend: function(settings) {
@@ -218,7 +218,7 @@ LIMIT 150;",
         return settings;
       },
       beforeXHR: function(xhr) {
-        //xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        // xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
         xhr.setRequestHeader('Content-Type', 'text/plain; charset=UTF-8');
       },
     },

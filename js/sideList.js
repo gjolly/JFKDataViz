@@ -1,15 +1,21 @@
 function addElements(elements) {
   addNodes(elements.nodes)
   addDocuments(elements.links)
-  agencies = new Set()
-  for(node of elements.nodes){
-    agencies.add(node["properties"]["agency"])
+  agencies = {}
+  for (node of elements.nodes) {
+    if (!(node["properties"]["agency"] in agencies)) {
+      agencies[node["properties"]["agency"]] = []
+    }
+    agencies[node["properties"]["agency"]].push(node)
   }
   addAgencies(agencies)
+  agenciesObj = agencies
 }
-
+var agenciesObj
 var listOfRemovedNodes = {}
 var listOfRemovedLinks = {}
+var listOfRemovedAgencies = {}
+var agenciesObjToAdd = {}
 
 function addNodes(nodes) {
   if (document.contains(document.getElementById("sidebarPeople"))) {
@@ -113,9 +119,9 @@ function addAgencies(agencies) {
   }
   let mainDetails = document.createElement("details");
   let mainSummary = document.createElement("summary");
-  let textMainSummary = document.createTextNode("People");
+  let textMainSummary = document.createTextNode("Agencies");
   let mainUl = document.createElement("ul");
-  for (ag of agencies) {
+  for (ag of Object.keys(agencies)) {
     let liContainer = document.createElement("li");
     liContainer.setAttribute("id", "listAgency" + ag)
     let detailsEl = document.createElement("details");
@@ -130,12 +136,12 @@ function addAgencies(agencies) {
     detailsEl.appendChild(buttonShow)
     liContainer.appendChild(detailsEl);
     liContainer.onmouseover = function() {
-      let nodeId = this.id.substring(4);
-      $("#" + nodeId).d3Mouseover();
+      let agId = this.id.substring(10);
+      $("#node" + agenciesObj[agId][0].id).d3MouseoverAgency();
     }
     liContainer.onmouseout = function() {
-      let nodeId = this.id.substring(4);
-      $("#" + nodeId).d3Mouseout();
+      let agId = this.id.substring(10);
+      $("#node" + agenciesObj[agId][0].id).d3Mouseout();
     }
     mainUl.appendChild(liContainer);
   }
@@ -173,6 +179,14 @@ jQuery.fn.d3Mouseout = function() {
     e.dispatchEvent(evt);
   });
 };
+
+jQuery.fn.d3MouseoverAgency = function() {
+  this.each(function(i, e) {
+    var evt = new MouseEvent("ListmouseoverAgency");
+    e.dispatchEvent(evt);
+  });
+};
+
 
 function removeNodeFromSideList() {
   let button = document.getElementById(this.id);
@@ -245,6 +259,82 @@ function removeLinkFromSideList() {
   }
 }
 
-function removeAgencyFromSideList(){
-  
+function removeAgencyFromSideList() {
+  let button = document.getElementById(this.id);
+  let associatedId = this.id.substring(16)
+  if (associatedId in listOfRemovedAgencies) {
+    button.innerHTML = "Hide"
+    for (n of agenciesObj[associatedId]) {
+      let nodeId = n.id
+      let buttonNode = document.getElementById("buttonShowNode"+nodeId);
+      buttonNode.innerHTML = "Hide"
+      buttonNode.disabled = false
+      graphObject.graph.nodes.push(n)
+    }
+    console.log(JSON.stringify(agenciesObjToAdd))
+    for(obj of agenciesObjToAdd[associatedId]){
+      for (let l of obj["links"]) {
+        graphObject.graph.links.push(l)
+        let but = document.getElementById("buttonShowLink" + l.linkid)
+        but.innerHTML = "Hide"
+        but.disabled = false
+      }
+    }
+    delete agenciesObjToAdd[associatedId]
+    graphObject.restart()
+    delete listOfRemovedAgencies[associatedId]
+  } else {
+    listOfRemovedAgencies[associatedId] = agenciesObj[associatedId]
+    agenciesObjToAdd[associatedId] = []
+    for (n of agenciesObj[associatedId]) {
+      let nodeId = n.id
+      if (nodeId in listOfRemovedNodes) {
+        graphObject.graph.nodes.push(listOfRemovedNodes[nodeId]["Node"])
+        for (let l of listOfRemovedNodes[nodeId]["links"]) {
+          graphObject.graph.links.push(l)
+          let but = document.getElementById("buttonShowLink" + l.linkid)
+          but.innerHTML = "Hide"
+          but.disabled = false
+        }
+        button.innerHTML = "Hide"
+        delete listOfRemovedNodes[associatedId]
+      }
+      let objToAdd = {}
+      objToAdd["links"] = []
+      let linkToRemove = []
+      for (let l of graphObject.graph.links) {
+        if (l.source.id == nodeId ||  l.target.id == nodeId) {
+          objToAdd["links"].push(l)
+          linkToRemove.push(l.linkid)
+          let but = document.getElementById("buttonShowLink" + l.linkid)
+          but.innerHTML = "Show"
+          but.disabled = true
+        }
+      }
+      for (const [key, l] of Object.entries(listOfRemovedLinks)) {
+        if (l.source.id == nodeId ||  l.target.id == nodeId) {
+          objToAdd["links"].push(l)
+          linkToRemove.push(l.linkid)
+          let but = document.getElementById("buttonShowLink" + l.linkid)
+          but.innerHTML = "Show"
+          but.disabled = true
+          delete listOfRemovedLinks[key]
+        }
+      }
+      graphObject.graph.nodes = graphObject.graph.nodes.filter(function(el) {
+        if (el.id == nodeId) {
+          objToAdd["Node"] = el
+          listOfRemovedNodes[nodeId] = objToAdd
+        }
+        return el.id != nodeId
+      })
+      graphObject.graph.links = graphObject.graph.links.filter(l => !(linkToRemove.includes(l.linkid)))
+      let buttonNode = document.getElementById("buttonShowNode"+nodeId);
+      buttonNode.innerHTML = "Show"
+      buttonNode.disabled = true
+      agenciesObjToAdd[associatedId].push(objToAdd)
+    }
+    graphObject.restart()
+    button.innerHTML = "Show"
+  }
 }

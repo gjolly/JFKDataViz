@@ -95,6 +95,7 @@ graphObject.showGraph = function(graph, init = true) {
     .on("mouseout", nodeMouseOut)
     .on("Listmouseover", ListnodeMouseOver)
     .on("Listmouseout", ListnodeMouseOut)
+    .on("ListmouseoverAgency", ListnodeMouseOverAgency)
 
   this.label = this.g.selectAll(".mytext")
     .data(this.graph.nodes)
@@ -132,7 +133,7 @@ graphObject.isConnected = function(a, b) {
 }
 
 graphObject.restart = function() {
-  graphObject.node = graphObject.node.data([])//If we remove this line id won't be associated to the good object
+  graphObject.node = graphObject.node.data([]) //If we remove this line id won't be associated to the good object
   graphObject.node.exit().remove();
   graphObject.node = graphObject.node.data(graphObject.graph.nodes)
   graphObject.node = graphObject.node.enter().append("circle")
@@ -145,6 +146,7 @@ graphObject.restart = function() {
     .on("mouseout", nodeMouseOut)
     .on("Listmouseover", ListnodeMouseOver)
     .on("Listmouseout", ListnodeMouseOut)
+    .on("ListmouseoverAgency", ListnodeMouseOverAgency)
     .attr("id", function(d) {
       return "node" + d.id
     })
@@ -175,6 +177,9 @@ graphObject.restart = function() {
     .on("mouseout", linkMouseOut)
     .on("Listmouseover", linkMouseOver)
     .on("Listmouseout", linkMouseOut)
+    .on('click', function(d) {
+      window.open("https://www.archives.gov/files/research/jfk/releases/" + d.properties.fileName.toLowerCase());
+    })
     .merge(graphObject.link);
   graphObject.simulation
     .nodes(graphObject.graph.nodes)
@@ -218,7 +223,9 @@ graphObject.ticked = function() {
       dr = Math.sqrt(dx * dx + dy * dy) / (0.1 + (1 / (0.5 * nmLink)) * (d.linkid % nmLink)),
       mx = d.source.x + dx,
       my = d.source.y + dy;
-    se = Math.round(Math.random())
+      dr = Math.round(dr * 100) / 100;
+      mx = Math.round(mx * 100) / 100;
+      my = Math.round(my * 100) / 100;
     return [
       "M", d.source.x, d.source.y,
       "A", dr, dr, 0, 0, d.linkid % 2, mx, my,
@@ -334,6 +341,15 @@ function ListnodeMouseOver(d) {
   })
   graphObject.node.style('stroke', function(l) {
     return d.id == l.id ? "#faa" : "#fff"
+  })
+}
+
+function ListnodeMouseOverAgency(d) {
+  graphObject.node.style('opacity', function(l) {
+    return d["properties"]["agency"] == l["properties"]["agency"] ? 1 : 0.4
+  })
+  graphObject.node.style('stroke', function(l) {
+    return d["properties"]["agency"] == l["properties"]["agency"] ? "#faa" : "#fff"
   })
 }
 
