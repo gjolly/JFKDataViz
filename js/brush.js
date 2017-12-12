@@ -26,9 +26,9 @@ window.onload = () => {
     .on("zoom", zoomed);
 
   var svg2 = d3.select("#svgB").append("svg")
-    .attr("width", "90%")
-    .attr("height", "10%")
-    .append("g");
+    .attr("width", "100%")
+    .append("g")
+      .attr("width", "100%");
 
   svg2.call(zoom);
   axisBottom1 = d3.axisBottom(x)

@@ -1,7 +1,7 @@
 .brush {
   position: absolute;
-  bottom: 5%;
-  left: 5%;
+  bottom: 0%;
+  width: 100%;
 }
 
 .axis--grid .domain {
@@ -16,4 +16,8 @@
 
 .axis--grid .tick--minor line {
   stroke-opacity: .5;
+}
+
+#svgB > g {
+  width: 100%;
 }
