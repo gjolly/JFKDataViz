@@ -35,11 +35,7 @@ div.tooltip {
 }
 
 #svgA {
-  position: inherit;
-  margin: auto;
-  width: 90%;
-  height: 90%;
-  left: 5%;
+  height: 100%;
 }
 
 #svgGraph {

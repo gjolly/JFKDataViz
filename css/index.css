@@ -1,4 +1,4 @@
-body {
+/*body {
   background-color: #FFFFFF;
 }
 body.pushable{
@@ -25,4 +25,35 @@ body.pushable{
 
 #sidebar ul{
   list-style-type: none;
+}*/
+
+html,
+body {
+  height: 100%;
+  margin: 0
+}
+
+.box {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+.box .row {
+  border: 1px dotted grey;
+}
+
+.box .row.header {
+  flex: 0 1 auto;
+  padding: 0;
+}
+
+.box .row.content {
+  flex: 1 1 auto;
+  padding: 0;
+}
+
+.box .row.footer {
+  flex: 0 1 40px;
+  padding: 0;
 }
