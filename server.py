@@ -61,7 +61,7 @@ def run():
     # server, you need root access
     server_address = ('', 8080)
     httpd = HTTPServer(server_address, testHTTPServer_RequestHandler)
-    httpd.socket = ssl.wrap_socket(httpd.socket, certfile='/etc/letsencrypt/live/dataviz.gauthierjolly.com/fullchain.pem', server_side=True)
+    httpd.socket = ssl.wrap_socket(httpd.socket, keyfile="keypath", certfile='certpath', server_side=True)
     print('running server...')
     httpd.serve_forever()
 
