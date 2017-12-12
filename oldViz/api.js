@@ -1,4 +1,4 @@
-const url = 'http://dataviz.gauthierjolly.com:8080';
+const url = 'https://dataviz.gauthierjolly.com:8080';
 //I can't manage to use params here
 let data = JSON.stringify({
   "statements": [{
@@ -72,7 +72,7 @@ fetch(url, fetchData).then(r => r.json())
             type: r.type,
             properties: r.properties
           };
-        }));  
+        }));
       });
       let linkid = 1
 
