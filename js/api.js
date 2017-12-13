@@ -11,9 +11,9 @@ let data = JSON.stringify({
     "resultDataContents": ["graph"]
   }]
 })
-graphFetch(url, data);
+graphFetch(url, data,first=true);
 
-function graphFetch(url, data) {
+function graphFetch(url, data,first=false) {
   let fetchData = {
     method: 'POST',
     body: data,
@@ -27,7 +27,13 @@ function graphFetch(url, data) {
         let arrayGraph = data["results"][0]["data"]
         viz = convertApiResult(data)
         console.log(viz)
-        graphObject.showGraph(viz)
+        if(first){
+          graphObject.showGraph(viz)
+        }
+        else{
+          graphObject.graph = viz
+          graphObject.restart()
+        }
         addElements(viz)
       }
     })
@@ -226,3 +232,6 @@ LIMIT 150;",
       console.log(result, response)
     }
   });
+function makeReqAndShow(req){
+
+}

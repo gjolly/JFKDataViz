@@ -271,7 +271,6 @@ function removeAgencyFromSideList() {
       buttonNode.disabled = false
       graphObject.graph.nodes.push(n)
     }
-    console.log(JSON.stringify(agenciesObjToAdd))
     for(obj of agenciesObjToAdd[associatedId]){
       for (let l of obj["links"]) {
         graphObject.graph.links.push(l)
@@ -297,7 +296,7 @@ function removeAgencyFromSideList() {
           but.disabled = false
         }
         button.innerHTML = "Hide"
-        delete listOfRemovedNodes[associatedId]
+        delete listOfRemovedNodes[nodeId]
       }
       let objToAdd = {}
       objToAdd["links"] = []
@@ -324,7 +323,7 @@ function removeAgencyFromSideList() {
       graphObject.graph.nodes = graphObject.graph.nodes.filter(function(el) {
         if (el.id == nodeId) {
           objToAdd["Node"] = el
-          listOfRemovedNodes[nodeId] = objToAdd
+          //listOfRemovedNodes[nodeId] = objToAdd
         }
         return el.id != nodeId
       })

@@ -117,8 +117,10 @@ graphObject.showGraph = function(graph, init = true) {
   this.simulation.force("link")
     .links(this.graph.links)
     .distance(Math.sqrt(d3.select('#svgA').node().clientWidth ** 2 + d3.select('#svgA').node().clientHeight ** 2) / 8);
-
-  this.resize(s = false);
+  for (let i = 0, n = Math.ceil(Math.log(graphObject.simulation.alphaMin()) / Math.log(1 - graphObject.simulation.alphaDecay())); i < n; ++i) {
+    graphObject.simulation.tick(init = true);
+  }
+  setTimeout(()=>graphObject.resize(s = false),500);
   d3.select(window).on("resize", this.resize);
 
   this.link.on('click', function(d) {
@@ -186,11 +188,14 @@ graphObject.restart = function() {
   graphObject.simulation.force("link")
     .links(graphObject.graph.links)
     .distance(Math.sqrt(d3.select('#svgA').node().clientWidth ** 2 + d3.select('#svgA').node().clientHeight ** 2) / 8);
-
-  graphObject.simulation.alpha(1).restart();
+    graphObject.simulation.alphaTarget(0).restart()
+  for (let i = 0, n = Math.ceil(Math.log(graphObject.simulation.alphaMin()) / Math.log(1 - graphObject.simulation.alphaDecay())); i < n; ++i) {
+    graphObject.simulation.tick(init = true);
+  }
+  setTimeout(()=>graphObject.resize(s = false),500);
 }
 
-graphObject.ticked = function() {
+graphObject.ticked = function(init = false) {
   graphObject.node.attr("transform", function(d) {
     // let maxW = scaleMod*d3.select("#svgA").node().clientWidth / 2
     // let maxH = scaleMod*d3.select("#svgA").node().clientHeight / 2
@@ -223,9 +228,9 @@ graphObject.ticked = function() {
       dr = Math.sqrt(dx * dx + dy * dy) / (0.1 + (1 / (0.5 * nmLink)) * (d.linkid % nmLink)),
       mx = d.source.x + dx,
       my = d.source.y + dy;
-      dr = Math.round(dr * 100) / 100;
-      mx = Math.round(mx * 100) / 100;
-      my = Math.round(my * 100) / 100;
+    dr = Math.round(dr * 100) / 100;
+    mx = Math.round(mx * 100) / 100;
+    my = Math.round(my * 100) / 100;
     return [
       "M", d.source.x, d.source.y,
       "A", dr, dr, 0, 0, d.linkid % 2, mx, my,
@@ -267,7 +272,7 @@ graphObject.resize = function(s = true) {
     graphObject.g.transition()
       .duration(750)
       .call(graphObject.zoom_handler.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(1));
-    graphObject.simulation.restart();
+
   }
 }
 

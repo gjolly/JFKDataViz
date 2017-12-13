@@ -9,6 +9,7 @@
   <title>JFK Dataviz</title>
 
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui-calendar/0.0.8/calendar.min.css">
   <link rel="stylesheet" type="text/css" href="css/index.css">
   <link rel="stylesheet" type="text/css" href="css/graph.css">
   <link rel="stylesheet" type="text/css" href="css/brush.css">
@@ -24,32 +25,85 @@
 
   <div class="ui sidebar inverted vertical menu" id="sidebar">
     <p>
-          <img src="img/close.png" height="30px" align="right" id="closeSideList" />
-        </p>
-        <div class="ui search" id="peoplesearch">
-          <div class="ui icon input">
-            <input class="prompt" placeholder="Search People..." type="text">
-            <i class="search icon"></i>
-          </div>
-          <div class="results"></div>
-        </div>
-        <div class="ui search" id="documentsearch">
-          <div class="ui icon input">
-            <input class="prompt" placeholder="Search documents..." type="text">
-            <i class="search icon"></i>
-          </div>
-          <div class="results"></div>
-        </div>
+      <img src="img/close.png" height="30px" align="right" id="closeSideList" />
+    </p>
+    <div class="ui search" id="peoplesearch">
+      <div class="ui icon input">
+        <input class="prompt" placeholder="Search People..." type="text">
+        <i class="search icon"></i>
+      </div>
+      <div class="results"></div>
+    </div>
+    <div class="ui search" id="documentsearch">
+      <div class="ui icon input">
+        <input class="prompt" placeholder="Search documents..." type="text">
+        <i class="search icon"></i>
+      </div>
+      <div class="results"></div>
+    </div>
+    <button onclick="$('.ui.modal')
+      .modal('show')
+    ;">Or try Advanced Search</button>
   </div>
 
+  <div class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+      Advanced search
+    </div>
+    <div class="ui form" id="formAdSe">
+      <div class="field_wrapper">
+        <a href="javascript:void(0);" class="add_button" title="Add field"><img height="30px" src="img/add.png"/></a>
+        <div class="fields">
+          <div class="field">
+            <div class="ui sub header">Target</div>
+            <select name="one1" id="sel1a" class="ui fluid search dropdown">
+        <option value="">Choose a field</option>
+      <option value="p1.name">Sender name</option>
+      <option value="p1.agency">Sender agency</option>
+      <option value="p2.name">Recipient name</option>
+      <option value="p2.agency">Recipient agency</option>
+      <option value="date">Date</option>
+      <option value="doc.fileName">Document file name</option>
+      <option value="doc.recordNumber">Record number</option>
+      <option value="doc.type">Document type</option>
+      <option value="doc.fileNum">Document file number</option>
+      <option value="doc.title">Document title</option>
+      <option value="doc.pageNumber">Document page number</option>
+      <option value="doc.comments">Document comments</option>
+      </select>
+          </div>
+          <div class="field">
+            <div class="ui sub header">Action</div>
+            <select name="two1" id='sel1b' class="ui fluid search dropdown">
+        <option value="">Choose an action</option>
+        </select>
+          </div>
+          <div class="field" id="sel1c">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="ui black deny button">
+        Cancel
+      </div>
+      <div class="ui positive right labeled icon button" onclick="valAdSe()">
+        Submit
+        <i class="checkmark icon"></i>
+      </div>
+    </div>
+  </div>
   <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui-calendar/0.0.8/calendar.min.js"></script>
   <script src="js/index.js"></script>
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="js/api.js"></script>
   <script src="js/graph.js"></script>
   <script src="js/sideList.js"></script>
   <script src="js/brush.js"></script>
+  <script src="js/advancedSearch.js"></script>
 </body>
 
 </html>
