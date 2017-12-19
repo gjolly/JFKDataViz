@@ -1,4 +1,5 @@
 var graphObject = {};
+var posInit = false
 graphObject.showGraph = function(graph, init = true) {
   this.graph = graph
   this.lux = 0;
@@ -51,6 +52,9 @@ graphObject.showGraph = function(graph, init = true) {
   this.zoom_handler = d3.zoom()
     .on("zoom", zoom_actions);
   this.zoom_handler(this.svg);
+
+  this.zoom_handler_auto = d3.zoom()
+    .on("zoom", zoom_actions_auto);
 
   this.simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(function(d) {
@@ -120,7 +124,7 @@ graphObject.showGraph = function(graph, init = true) {
   for (let i = 0, n = Math.ceil(Math.log(graphObject.simulation.alphaMin()) / Math.log(1 - graphObject.simulation.alphaDecay())); i < n; ++i) {
     graphObject.simulation.tick(init = true);
   }
-  setTimeout(()=>graphObject.resize(s = false),500);
+  setTimeout(() => graphObject.resize(s = false), 500);
   d3.select(window).on("resize", this.resize);
 
   this.link.on('click', function(d) {
@@ -128,6 +132,7 @@ graphObject.showGraph = function(graph, init = true) {
   })
 
 }
+
 
 
 graphObject.isConnected = function(a, b) {
@@ -188,11 +193,11 @@ graphObject.restart = function() {
   graphObject.simulation.force("link")
     .links(graphObject.graph.links)
     .distance(Math.sqrt(d3.select('#svgA').node().clientWidth ** 2 + d3.select('#svgA').node().clientHeight ** 2) / 8);
-    graphObject.simulation.alphaTarget(0).restart()
+  graphObject.simulation.alphaTarget(0).restart()
   for (let i = 0, n = Math.ceil(Math.log(graphObject.simulation.alphaMin()) / Math.log(1 - graphObject.simulation.alphaDecay())); i < n; ++i) {
     graphObject.simulation.tick(init = true);
   }
-  setTimeout(()=>graphObject.resize(s = false),500);
+  setTimeout(() => graphObject.resize(s = false), 500);
 }
 
 graphObject.ticked = function(init = false) {
@@ -241,6 +246,7 @@ graphObject.ticked = function(init = false) {
 }
 
 graphObject.resize = function(s = true) {
+  posInit = false
   var bounds = graphObject.g.node().getBBox();
   var parent = graphObject.g.node().parentElement;
   var fullWidth = parent.clientWidth || parent.parentNode.clientWidth,
@@ -262,25 +268,24 @@ graphObject.resize = function(s = true) {
     //g.attr("transform", d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale));
     graphObject.g.transition()
       .duration(750)
-      .call(graphObject.zoom_handler.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale));
-
+      .call(graphObject.zoom_handler_auto.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale));
+    posInit = true;
   } else {
+
     this.lux = -1 * translate[0];
     this.luy = -1 * translate[1];
     this.rdx = translate[0];
     this.rdy = translate[1];
-    graphObject.g.transition()
-      .duration(750)
-      .call(graphObject.zoom_handler.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(1));
-
+    graphObject.g
+      .call(graphObject.zoom_handler_auto.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(1));
+    posInit = true;
   }
 }
 
 
 function linkMouseOver(d) {
-  graphObject.div.transition()
-    .duration(200)
-    .style("opacity", .9);
+  graphObject.div
+    .style("opacity", 1);
   graphObject.div.html(d.properties.fileName + "<br/>" + d.properties.day + "/" + d.properties.month + "/" + d.properties.year)
     .style("left", (d3.event.pageX) + "px")
     .style("top", (d3.event.pageY - 28) + "px");
@@ -380,7 +385,27 @@ function dragended(d) {
   // d.fy = null;
 }
 
-
 function zoom_actions() {
+  console.log("e")
+  if (d3.event.transform.k) {
+    d3.event.transform.k = Math.max(Math.min(d3.event.transform.k, 1.5), 0.5)
+    prevk = d3.event.transform.k
+  }
+  graphObject.g.attr("transform", d3.event.transform);
+  //console.log(graphObject.node._groups[0][0].getBoundingClientRect())
+  let counter = 0
+  for (circle of graphObject.node._groups[0]) {
+    bb = circle.getBoundingClientRect()
+    counter += (bb.x < 0 && bb.y < 0) ? 1 : 0
+  }
+  if (counter > (graphObject.node._groups[0].length / 3)){
+    graphObject.resize()
+  }
+}
+
+function zoom_actions_auto() {
   graphObject.g.attr("transform", d3.event.transform);
 }
+$('#resetGraph').click(function() {
+  graphObject.restart()
+});
