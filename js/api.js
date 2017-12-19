@@ -1,19 +1,40 @@
-const url = 'https://dataviz.gauthierjolly.com:8080';
+const url = 'https://18.217.156.225:8080';
 // const url = 'http://localhost:7474/db/data/transaction/commit';
+var criteria = {date1: new Date('1900-01-01'),
+                date2: new Date('1970-01-01'),
+                document: '.*',
+                name: '.*'
+              };
+
+function researchStatement() {
+  let s = "MATCH (p1:People)-[doc:SENDTO]->(p2:People)\
+  WHERE (doc.year >= " + criteria.date1.getFullYear() + "\
+  AND doc.year <= " + criteria.date2.getFullYear() + ") \
+  AND (toLower(doc.comments) =~ toLower(\"" + criteria.document + "\") \
+  OR toLower(doc.fileName) =~ toLower(\"" + criteria.document + "\") \
+  OR toLower(doc.fileNum) =~ toLower(\"" + criteria.document + "\") \
+  OR toLower(doc.recordNumber) =~ toLower(\"" + criteria.document + "\") \
+  OR toLower(doc.title) =~ toLower(\"" + criteria.document + "\")) \
+  AND (p2.name =~ \"" + criteria.name + "\" \
+  OR p1.name =~ \"" + criteria.name + "\")\
+  AND p2.name <> \"NONE\" \
+  AND p1.name <> \"NONE\"\
+  AND p1.name <> p2.name \
+  RETURN p1, p2, doc\
+  LIMIT 150;";
+  console.log("Reasearch statement: " + s);
+  return s;
+}
+
 let data = JSON.stringify({
   "statements": [{
-    "statement": "MATCH (p1:People)-[doc:SENDTO]->(p2:People)\
-  WHERE doc.day = 4\
-  AND p2.name <> \"NONE\"\
-  AND p1.name <> \"NONE\"\
-  RETURN p1,p2,doc\
-  LIMIT 150;",
+    "statement": researchStatement(),
     "resultDataContents": ["graph"]
   }]
 })
-graphFetch(url, data,first=true);
+graphFetch(url, data, first = true);
 
-function graphFetch(url, data,first=false) {
+function graphFetch(url, data, first = false) {
   let fetchData = {
     method: 'POST',
     body: data,
@@ -23,14 +44,14 @@ function graphFetch(url, data,first=false) {
   fetchData.headers.append('Content-Type', 'text/plain; charset=UTF-8');
   fetch(url, fetchData).then(r => r.json())
     .then(function(data) {
+      console.log(data["errors"])
       if (!data["errors"].length) {
         let arrayGraph = data["results"][0]["data"]
         viz = convertApiResult(data)
         console.log(viz)
-        if(first){
+        if (first) {
           graphObject.showGraph(viz)
-        }
-        else{
+        } else {
           graphObject.graph = viz
           graphObject.restart()
         }
@@ -39,14 +60,14 @@ function graphFetch(url, data,first=false) {
     })
 }
 
-function peopleGraph(peopleName) {
+function changeGraph() {
   // const url = 'http://localhost:7474/db/data/transaction/commit';
   const url = "https://dataviz.gauthierjolly.com:8080"
   let data = JSON.stringify({
     "statements": [{
       "statement": "MATCH (p1:People)-[doc:SENDTO]->(p2:People)\
-    WHERE p2.name = \""+peopleName+"\" \
-    OR p1.name= \""+peopleName+"\" \
+    WHERE p2.name = \"" + peopleName + "\" \
+    OR p1.name= \"" + peopleName + "\" \
     RETURN p1,p2,doc\
     LIMIT 150;",
       "resultDataContents": ["graph"]
@@ -65,7 +86,37 @@ function peopleGraph(peopleName) {
         let arrayGraph = data["results"][0]["data"]
         viz = convertApiResult(data)
         console.log(viz)
-        graphObject.graph=viz
+        graphObject.graph = viz
+        graphObject.restart()
+        addElements(viz)
+      }
+    })
+}
+
+function peopleGraph(peopleName) {
+  // const url = 'http://localhost:7474/db/data/transaction/commit';
+  const url = "https://dataviz.gauthierjolly.com:8080"
+  criteria.name =  peopleName;
+  let data = JSON.stringify({
+    "statements": [{
+      "statement": researchStatement(),
+      "resultDataContents": ["graph"]
+    }]
+  })
+  let fetchData = {
+    method: 'POST',
+    body: data,
+    headers: new Headers()
+  }
+  // fetchData.headers.append('Content-Type', 'application/json; charset=UTF-8');
+  fetchData.headers.append('Content-Type', 'text/plain; charset=UTF-8');
+  fetch(url, fetchData).then(r => r.json())
+    .then(function(data) {
+      if (!data["errors"].length) {
+        let arrayGraph = data["results"][0]["data"]
+        viz = convertApiResult(data)
+        console.log(viz)
+        graphObject.graph = viz
         graphObject.restart()
         addElements(viz)
       }
@@ -142,18 +193,20 @@ $('#peoplesearch')
         return resp;
       },
       // url: 'http://localhost:7474/db/data/transaction/commit',
-      url : "https://dataviz.gauthierjolly.com:8080",
+      url: url,
       method: 'POST',
       beforeSend: function(settings) {
+        criteria.name = '.*' + settings.urlData.query.toUpperCase() + '.*'
         settings.data = JSON.stringify({
           "statements": [{
             "statement": "MATCH (p1:People)\
-          WHERE p1.name =~ '.*" + settings.urlData.query.toUpperCase() + ".*'\
-          RETURN p1\
-          LIMIT 10;",
+            WHERE p1.name =~ \"" + criteria.name + "\"\
+            RETURN p1\
+            LIMIT 15;",
             "resultDataContents": ["graph"]
           }]
         })
+        console.log(settings.data);
         return settings;
       },
       beforeXHR: function(xhr) {
@@ -203,21 +256,13 @@ $('#documentsearch')
         addElements(viz)
       },
       // url: 'http://localhost:7474/db/data/transaction/commit',
-      url : "https://dataviz.gauthierjolly.com:8080",
+      url: url,
       method: 'POST',
       beforeSend: function(settings) {
+        criteria.document = '.*' + settings.urlData.query + '.*';
         settings.data = JSON.stringify({
           "statements": [{
-            "statement": "MATCH (p1:People)-[doc:SENDTO]->(p2:People) \
-WHERE toLower(doc.comments) CONTAINS toLower(\"" + settings.urlData.query + "\") \
-OR toLower(doc.fileName) CONTAINS toLower(\"" + settings.urlData.query + "\") \
-OR toLower(doc.fileNum) CONTAINS toLower(\"" + settings.urlData.query + "\") \
-OR toLower(doc.recordNumber) CONTAINS toLower(\"" + settings.urlData.query + "\") \
-OR toLower(doc.title) CONTAINS toLower(\"" + settings.urlData.query + "\") \
-AND p2.name <> \"NONE\"\
-AND p1.name <> \"NONE\"\
-RETURN doc \
-LIMIT 150;",
+            "statement": researchStatement(),
             "resultDataContents": ["graph"]
           }]
         })
@@ -232,6 +277,7 @@ LIMIT 150;",
       console.log(result, response)
     }
   });
-function makeReqAndShow(req){
+
+function makeReqAndShow(req) {
 
 }

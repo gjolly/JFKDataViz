@@ -78,7 +78,18 @@ window.onload = () => {
     //   d1[1] = d3.timeYear.offset(d1[0]);
     // }
     // d3.select(this).transition().call(d3.event.target.move, d1.map(x));
-    return d1[0], d1[1]
+
+    criteria.date1 = d1[0];
+    criteria.date2 = d1[1];
+
+    let data = JSON.stringify({
+      "statements": [{
+        "statement": researchStatement(),
+        "resultDataContents": ["graph"]
+      }]
+    });
+
+    graphFetch(url, data);
   }
 
   function zoomed() {
