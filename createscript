@@ -12,7 +12,7 @@ WITH line, SPLIT(line.`Doc Date`, '/') AS docdate
 MERGE (from:People {name: UPPER(line.`From Name`)})
 MERGE (to:People {name: UPPER(line.`To`)})
 SET from.agency = line.Originator
-SET to.agency= line.Agency
+//SET to.agency= line.Agency
 
 CREATE (from)-[document:SENDTO]->(to)
 SET document.year = TOINT(docdate[2]),

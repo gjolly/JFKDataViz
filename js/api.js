@@ -1,4 +1,4 @@
-const url = 'https://dataviz.gauthierjolly.com:8080';
+const url = 'https://18.217.156.225:8080';
 // const url = 'http://localhost:7474/db/data/transaction/commit';
 var criteria = {date1: new Date('1900-01-01'),
                 date2: new Date('1970-01-01'),
@@ -193,7 +193,7 @@ $('#peoplesearch')
         return resp;
       },
       // url: 'http://localhost:7474/db/data/transaction/commit',
-      url: "https://dataviz.gauthierjolly.com:8080",
+      url: url,
       method: 'POST',
       beforeSend: function(settings) {
         criteria.name = '.*' + settings.urlData.query.toUpperCase() + '.*'
@@ -256,7 +256,7 @@ $('#documentsearch')
         addElements(viz)
       },
       // url: 'http://localhost:7474/db/data/transaction/commit',
-      url: "https://dataviz.gauthierjolly.com:8080",
+      url: url,
       method: 'POST',
       beforeSend: function(settings) {
         criteria.document = '.*' + settings.urlData.query + '.*';
