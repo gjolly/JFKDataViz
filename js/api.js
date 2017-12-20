@@ -1,4 +1,4 @@
-const url = 'https://18.217.156.225:8080';
+const url = 'https://dataviz.gauthierjolly.com:8080';
 // const url = 'http://localhost:7474/db/data/transaction/commit';
 var criteria = {date1: new Date('1900-01-01'),
                 date2: new Date('1970-01-01'),
@@ -21,7 +21,7 @@ function researchStatement() {
   AND p1.name <> \"NONE\"\
   AND p1.name <> p2.name \
   RETURN p1, p2, doc\
-  LIMIT 150;";
+  LIMIT 50;";
   console.log("Reasearch statement: " + s);
   return s;
 }
@@ -170,7 +170,7 @@ $('#peoplesearch')
     type: 'category',
     searchOnFocus: false,
     showNoResults: true,
-    minCharacters: 3,
+    minCharacters: 2,
     apiSettings: {
       onResponse: function(apiResponse) {
         let
@@ -202,7 +202,7 @@ $('#peoplesearch')
             "statement": "MATCH (p1:People)\
             WHERE p1.name =~ \"" + criteria.name + "\"\
             RETURN p1\
-            LIMIT 15;",
+            LIMIT 10;",
             "resultDataContents": ["graph"]
           }]
         })

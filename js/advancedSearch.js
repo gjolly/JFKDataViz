@@ -63,7 +63,7 @@ function addfields(w, x) {
         </div>\
         <div class="field" id="sel' + x + 'c"> \
         </div>\
-        <a href="javascript:void(0);" class="remove_button" title="Remove field"><img height="30px" src="img/remove.png"/></a>\
+        <i class="material-icons remove_button" style="vertical-align:middle; color: #F44336;">remove_circle</i>\
       </div>';
   $(w).append(fieldHTML);
 }
