@@ -10,8 +10,7 @@
 
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui-calendar/0.0.8/calendar.min.css">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="css/index.css">
   <link rel="stylesheet" type="text/css" href="css/graph.css">
   <link rel="stylesheet" type="text/css" href="css/brush.css">
@@ -19,35 +18,72 @@
 </head>
 
 <body>
-  <button id="showList">Show List</button>
+  <!-- <button id="showList">Show List</button> -->
   <div id="svgA">
   </div>
   <div id="svgB" class="brush">
   </div>
 
-  <div class="ui sidebar inverted vertical menu" id="sidebar">
-    <p style="text-align: right;">
+  <div class="ui sidebar vertical menu" id="sidebar">
+    <!-- <p style="text-align: right;">
 
       <i class="material-icons" style="color:white;font-size: 300%;"id="closeSideList" >close</i>
 
-    </p>
-    <div class="ui fluid search" id="peoplesearch">
-      <div class="ui icon input">
-        <input class="prompt" placeholder="Search People..." type="text">
-        <i class="search icon"></i>
+    </p> -->
+    <div id="contentsbar">
+      <div class="ui fluid search sbarelement" id="peoplesearch">
+        <div class="ui icon input">
+          <input class="prompt" placeholder="Search People..." type="text">
+          <i class="search icon"></i>
+        </div>
+        <div class="results"></div>
       </div>
-      <div class="results"></div>
-    </div>
-    <div class="ui search" id="documentsearch">
-      <div class="ui icon input">
-        <input class="prompt" placeholder="Search documents..." type="text">
-        <i class="search icon"></i>
+      <div class="ui search sbarelement" id="documentsearch">
+        <div class="ui icon input">
+          <input class="prompt" placeholder="Search documents..." type="text">
+          <i class="search icon"></i>
+        </div>
+        <div class="results"></div>
       </div>
-      <div class="results"></div>
+      <div class="sbarelement">
+        <button class="ui right labeled icon grey button" onclick="$('.ui.modal').modal('show');">
+        <i class="search icon"></i>
+          Advanced search
+      </button>
+      </div>
+      <div id="accordsb" class="ui fluid accordion">
+        <div class="item">
+          <div class="title">
+            <div class="qs">
+              <label>Research criteria</label>
+            </div>
+          </div>
+          <div class="content">
+            <a class="ui label">
+                Crit 1
+            <i class="delete icon"></i>
+            </a>
+            <a class="ui label">
+                Crit 2
+            <i class="delete icon"></i>
+            </a>
+            <a class="ui label">
+                Crit 3
+            <i class="delete icon"></i>
+            </a>
+            <div class="ui checkbox">
+              <input name="noneOk" type="checkbox">
+              <label>Show None values</label>
+            </div>
+            <div class="ui checkbox">
+              <input name="WhithheldOK" type="checkbox">
+              <label>Show Whitheld values</label>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
-    <button onclick="$('.ui.modal')
-      .modal('show')
-    ;">Or try Advanced Search</button>
   </div>
 
   <div class="ui modal">

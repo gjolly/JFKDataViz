@@ -1,38 +1,58 @@
 body {
   background-color: #FFFFFF;
 }
-body.pushable{
+
+body.pushable {
   background: #FFFFFF !important;
 }
+
 .ui.menu .item img.logo {
   margin-right: 1.5em;
 }
+
 .main.container {
   margin-top: 7em;
   height: 90%
 }
+
 .wireframe {
   margin-top: 2em;
 }
+
 .ui.footer.segment {
   margin: 5em 0em 0em;
   padding: 5em 0em;
+}
+.ui.sidebar.vertical.menu.left.push.visible{
+  background-color: #ECEFF1;
+}
+
+#contentsbar {
+  margin-top: 10%
+}
+
+.sbarelement {
+  margin-bottom: 5%;
+  text-align: center;
+}
+.agen{
+  margin-bottom: 5%
 }
 
 #sidebar {
   position: absolute;
 }
 
-#sidebar details{
-  color: white;
+.ui.slider.checkbox.sb{
+  vertical-align: middle;
+  float: right;
 }
 
-#sidebar ul{
+#sidebar ul {
   list-style-type: none;
 }
 
-html,
-body {
+html, body {
   height: 100%;
   margin: 0
 }

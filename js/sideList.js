@@ -21,59 +21,97 @@ function addNodes(nodes) {
   if (document.contains(document.getElementById("sidebarPeople"))) {
     document.getElementById("sidebarPeople").remove();
   }
-  let mainDetails = document.createElement("details");
-  let mainSummary = document.createElement("summary");
-  let textMainSummary = document.createTextNode("People");
-  let mainUl = document.createElement("ul");
+  let secAcco = document.createElement("div");
+  secAcco.setAttribute("class","ui accordion sub")
   for (n of nodes) {
-    let liContainer = document.createElement("li");
-    liContainer.setAttribute("id", "listnode" + n.id)
-    let detailsEl = document.createElement("details");
-    let detailSummary = document.createElement("summary");
-    let textDetailSummary = document.createTextNode(n.title);
+    let divt = document.createElement("div");
+    divt.setAttribute("id", "listnode" + n.id)
+    divt.setAttribute("class", "title")
+    let divQ = document.createElement("i")
+    divQ.setAttribute("class", "qsa")
+    let divCheck = document.createElement("div")
+    divCheck.setAttribute("class","ui slider checkbox sb")
+    let inputcheck = document.createElement("input")
+    inputcheck.setAttribute('type',"checkbox")
+    inputcheck.setAttribute('checked',"True")
+    inputcheck.setAttribute("id", "buttonShowNode" + n.id)
+    inputcheck.onclick = removeNodeFromSideList
+    divCheck.appendChild(inputcheck)
+    divCheck.appendChild(document.createElement("label"))
+    let titletext = document.createTextNode(n.title);
+    divQ.appendChild(titletext)
+    let divContent= document.createElement("div");
+    divContent.setAttribute("class", "content")
     let textEl = document.createElement("p");
     let textCont = document.createTextNode("Agency : " + n.properties.agency)
     textEl.appendChild(textCont)
-    let buttonShow = document.createElement("button")
-    buttonShow.appendChild(document.createTextNode("Hide"))
-    buttonShow.setAttribute("id", "buttonShowNode" + n.id)
-    buttonShow.onclick = removeNodeFromSideList
-    detailSummary.appendChild(textDetailSummary)
-    detailsEl.appendChild(detailSummary);
-    detailsEl.appendChild(textEl)
-    detailsEl.appendChild(buttonShow)
-    liContainer.appendChild(detailsEl);
-    liContainer.onmouseover = function() {
+    divContent.appendChild(textEl)
+    divt.onmouseover = function() {
       let nodeId = this.id.substring(4);
       $("#" + nodeId).d3Mouseover();
     }
-    liContainer.onmouseout = function() {
+    divt.onmouseout = function() {
       let nodeId = this.id.substring(4);
       $("#" + nodeId).d3Mouseout();
     }
-    mainUl.appendChild(liContainer);
+    divt.appendChild(divQ)
+    divt.appendChild(divCheck)
+    secAcco.appendChild(divt);
+    secAcco.appendChild(divContent);
   }
-  mainSummary.appendChild(textMainSummary);
-  mainDetails.appendChild(mainSummary);
-  mainDetails.appendChild(mainUl);
-  mainDetails.setAttribute("id", "sidebarPeople")
-  document.getElementById("sidebar").appendChild(mainDetails);
+  let divItem = document.createElement("div")
+  divItem.setAttribute("class", "item")
+  let divTitle = document.createElement("div")
+  divTitle.setAttribute("class", "title")
+  let divQs = document.createElement("div")
+  divQs.setAttribute("class", "qs")
+  let labelQs = document.createElement("label")
+  labelQs.appendChild(document.createTextNode("People"))
+  let ilabel = document.createElement("i")
+  ilabel.setAttribute("class", "ui label")
+  ilabel.appendChild(document.createTextNode(graphObject.graph.nodes.length))
+  let divContent=document.createElement("div")
+  divContent.setAttribute("class","content")
+  divContent.appendChild(secAcco)
+  divQs.appendChild(labelQs)
+  divQs.appendChild(ilabel)
+  divTitle.appendChild(divQs)
+  divItem.appendChild(divTitle)
+  divItem.appendChild(divContent)
+  divItem.setAttribute("id", "sidebarPeople")
+  document.getElementById("accordsb").appendChild(divItem);
+  $('.ui.accordion.sub').accordion({
+    selector: {
+      trigger: '.title .qsa'
+    }
+  });
 }
 
 function addDocuments(documents) {
   if (document.contains(document.getElementById("sidebarDocument"))) {
     document.getElementById("sidebarDocument").remove();
   }
-  let mainDetails = document.createElement("details");
-  let mainSummary = document.createElement("summary");
-  let textMainSummary = document.createTextNode("Documents");
-  let mainUl = document.createElement("ul");
+  let secAcco = document.createElement("div");
+  secAcco.setAttribute("class","ui accordion sub")
   for (n of documents) {
-    let liContainer = document.createElement("li");
-    liContainer.setAttribute("id", "listlink" + n.linkid)
-    let detailsEl = document.createElement("details");
-    let detailSummary = document.createElement("summary");
-    let textDetailSummary = document.createTextNode(n.properties.fileName);
+    let divt = document.createElement("div");
+    divt.setAttribute("id", "listlink" + n.linkid)
+    divt.setAttribute("class", "title")
+    let divQ = document.createElement("i")
+    divQ.setAttribute("class", "qsa")
+    let divCheck = document.createElement("div")
+    divCheck.setAttribute("class","ui slider checkbox sb")
+    let inputcheck = document.createElement("input")
+    inputcheck.setAttribute('type',"checkbox")
+    inputcheck.setAttribute('checked',"True")
+    inputcheck.setAttribute("id", "buttonShowLink" + n.linkid)
+    inputcheck.onclick = removeLinkFromSideList
+    divCheck.appendChild(inputcheck)
+    divCheck.appendChild(document.createElement("label"))
+    let titletext = document.createTextNode(n.properties.fileName);
+    divQ.appendChild(titletext)
+    let divContent= document.createElement("div");
+    divContent.setAttribute("class", "content")
     let textEl = document.createElement("p");
     let cont = "File number " + n.properties.fileNum + "<br>"
     cont += "Date : " + n.properties.day + "/" + n.properties.month + "/" + n.properties.year
@@ -87,69 +125,100 @@ function addDocuments(documents) {
     // let textCont = document.createTextNode(cont)
     // textEl.appendChild(textCont)
     addText(textEl, cont)
-    let buttonShow = document.createElement("button")
-    buttonShow.appendChild(document.createTextNode("Hide"))
-    buttonShow.setAttribute("id", "buttonShowLink" + n.linkid)
-    buttonShow.onclick = removeLinkFromSideList
-    detailSummary.appendChild(textDetailSummary)
-    detailsEl.appendChild(detailSummary);
-    detailsEl.appendChild(textEl)
-    detailsEl.appendChild(buttonShow)
-    liContainer.appendChild(detailsEl);
-    liContainer.onmouseover = function() {
+    divContent.appendChild(textEl)
+    divt.onmouseover = function() {
       let linkId = this.id.substring(4);
       $("#" + linkId).d3Mouseover();
     }
-    liContainer.onmouseout = function() {
+    divt.onmouseout = function() {
       let linkId = this.id.substring(4);
       $("#" + linkId).d3Mouseout();
     }
-    mainUl.appendChild(liContainer);
+    divt.appendChild(divQ)
+    divt.appendChild(divCheck)
+    secAcco.appendChild(divt);
+    secAcco.appendChild(divContent);
   }
-  mainSummary.appendChild(textMainSummary);
-  mainDetails.appendChild(mainSummary);
-  mainDetails.appendChild(mainUl);
-  mainDetails.setAttribute("id", "sidebarDocument")
-  document.getElementById("sidebar").appendChild(mainDetails);
+  let divItem = document.createElement("div")
+  divItem.setAttribute("class", "item")
+  let divTitle = document.createElement("div")
+  divTitle.setAttribute("class", "title")
+  let divQs = document.createElement("div")
+  divQs.setAttribute("class", "qs")
+  let labelQs = document.createElement("label")
+  labelQs.appendChild(document.createTextNode("Documents"))
+  let ilabel = document.createElement("i")
+  ilabel.setAttribute("class", "ui label")
+  ilabel.appendChild(document.createTextNode(graphObject.graph.links.length))
+  let divContent=document.createElement("div")
+  divContent.setAttribute("class","content")
+  divContent.appendChild(secAcco)
+  divQs.appendChild(labelQs)
+  divQs.appendChild(ilabel)
+  divTitle.appendChild(divQs)
+  divItem.appendChild(divTitle)
+  divItem.appendChild(divContent)
+  divItem.setAttribute("id", "sidebarDocument")
+  document.getElementById("accordsb").appendChild(divItem);
+  $('.ui.accordion.sub').accordion({
+    selector: {
+      trigger: '.title .qsa'
+    }
+  });
 }
 
 function addAgencies(agencies) {
   if (document.contains(document.getElementById("sidebarAgency"))) {
     document.getElementById("sidebarAgency").remove();
   }
-  let mainDetails = document.createElement("details");
-  let mainSummary = document.createElement("summary");
-  let textMainSummary = document.createTextNode("Agencies");
-  let mainUl = document.createElement("ul");
+  let divContent=document.createElement("div")
+  divContent.setAttribute("class","content")
   for (ag of Object.keys(agencies)) {
-    let liContainer = document.createElement("li");
-    liContainer.setAttribute("id", "listAgency" + ag)
-    let detailsEl = document.createElement("details");
-    let detailSummary = document.createElement("summary");
+    let smalldi = document.createElement("div")
+    smalldi.setAttribute("class","agen")
+    let its = document.createElement("i");
+    its.setAttribute("id", "listAgency" + ag)
     let textDetailSummary = document.createTextNode(ag);
-    let buttonShow = document.createElement("button")
-    buttonShow.appendChild(document.createTextNode("Hide"))
-    buttonShow.setAttribute("id", "buttonShowAgency" + ag)
-    buttonShow.onclick = removeAgencyFromSideList
-    detailSummary.appendChild(textDetailSummary)
-    detailsEl.appendChild(detailSummary);
-    detailsEl.appendChild(buttonShow)
-    liContainer.appendChild(detailsEl);
-    liContainer.onmouseover = function() {
+    its.appendChild(textDetailSummary)
+    let divCheck = document.createElement("div")
+    divCheck.setAttribute("class","ui slider checkbox sb")
+    let inputcheck = document.createElement("input")
+    inputcheck.setAttribute('type',"checkbox")
+    inputcheck.setAttribute('checked',"True")
+    inputcheck.setAttribute("id", "buttonShowAgency" + ag)
+    inputcheck.onclick = removeAgencyFromSideList
+    divCheck.appendChild(inputcheck)
+    divCheck.appendChild(document.createElement("label"))
+    smalldi.appendChild(its)
+    smalldi.appendChild(divCheck)
+    its.onmouseover = function() {
       let agId = this.id.substring(10);
       $("#node" + agenciesObj[agId][0].id).d3MouseoverAgency();
     }
-    liContainer.onmouseout = function() {
+    its.onmouseout = function() {
       let agId = this.id.substring(10);
       $("#node" + agenciesObj[agId][0].id).d3Mouseout();
     }
-    mainUl.appendChild(liContainer);
+      divContent.appendChild(smalldi)
   }
-  mainSummary.appendChild(textMainSummary);
-  mainDetails.appendChild(mainSummary);
-  mainDetails.appendChild(mainUl);
-  mainDetails.setAttribute("id", "sidebarAgency")
-  document.getElementById("sidebar").appendChild(mainDetails);
+  let divItem = document.createElement("div")
+  divItem.setAttribute("class", "item")
+  let divTitle = document.createElement("div")
+  divTitle.setAttribute("class", "title")
+  let divQs = document.createElement("div")
+  divQs.setAttribute("class", "qs")
+  let labelQs = document.createElement("label")
+  labelQs.appendChild(document.createTextNode("Agencies"))
+  let ilabel = document.createElement("i")
+  ilabel.setAttribute("class", "ui label")
+  ilabel.appendChild(document.createTextNode(Object.keys(agencies).length))
+  divQs.appendChild(labelQs)
+  divQs.appendChild(ilabel)
+  divTitle.appendChild(divQs)
+  divItem.appendChild(divTitle)
+  divItem.appendChild(divContent)
+  divItem.setAttribute("id", "sidebarAgency")
+  document.getElementById("accordsb").appendChild(divItem);
 }
 
 function addText(node, text) {
@@ -266,12 +335,12 @@ function removeAgencyFromSideList() {
     button.innerHTML = "Hide"
     for (n of agenciesObj[associatedId]) {
       let nodeId = n.id
-      let buttonNode = document.getElementById("buttonShowNode"+nodeId);
+      let buttonNode = document.getElementById("buttonShowNode" + nodeId);
       buttonNode.innerHTML = "Hide"
       buttonNode.disabled = false
       graphObject.graph.nodes.push(n)
     }
-    for(obj of agenciesObjToAdd[associatedId]){
+    for (obj of agenciesObjToAdd[associatedId]) {
       for (let l of obj["links"]) {
         graphObject.graph.links.push(l)
         let but = document.getElementById("buttonShowLink" + l.linkid)
@@ -328,7 +397,7 @@ function removeAgencyFromSideList() {
         return el.id != nodeId
       })
       graphObject.graph.links = graphObject.graph.links.filter(l => !(linkToRemove.includes(l.linkid)))
-      let buttonNode = document.getElementById("buttonShowNode"+nodeId);
+      let buttonNode = document.getElementById("buttonShowNode" + nodeId);
       buttonNode.innerHTML = "Show"
       buttonNode.disabled = true
       agenciesObjToAdd[associatedId].push(objToAdd)
