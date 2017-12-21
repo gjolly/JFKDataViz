@@ -10,7 +10,20 @@ graphObject.showGraph = function(graph, init = true) {
   this.graph.links.forEach(function(d) {
     graphObject.linkedByIndex[d.source + "," + d.target] = true;
   });
-
+  var set = disjointSet();
+  for(n of this.graph.nodes){
+    set.add(n)
+  }
+  for(l of this.graph.links){
+      set.union(this.graph.nodes.find((e)=>e.id==l.source), this.graph.nodes.find((e)=>e.id==l.target));
+  }
+  let setnumber = 0
+  for(s of set.extract()){
+    for(n of s){
+      n.setId=setnumber
+    }
+    setnumber++
+  }
   if (init) {
     this.svg = d3.select("#svgA").append("svg")
       .attr("width", "100%")
@@ -106,7 +119,7 @@ graphObject.showGraph = function(graph, init = true) {
     .enter()
     .append("text")
     .text(function(d) {
-      return d.title.split(' ').join('\n');
+      return crop_title(d.title);
     })
     .style("text-anchor", "middle")
     .style("fill", "#555")
@@ -165,7 +178,7 @@ graphObject.restart = function() {
   graphObject.label = graphObject.label.enter()
     .append("text")
     .text(function(d) {
-      return d.title.split(' ').join('\n');
+      return crop_title(d.title)
     })
     .style("text-anchor", "middle")
     .style("fill", "#555")
@@ -313,6 +326,11 @@ function nodeMouseOver(d) {
   graphObject.node.style('stroke', function(l) {
     return graphObject.isConnected(d, l) ? "#faa" : "#fff"
   })
+  graphObject.label.transition()
+    .duration(200)
+    .text(function(l) {
+      return d.id == l.id ? l.title : crop_title(l.title);
+    })
   graphObject.div.transition()
     .duration(200)
     .style("opacity", .9);
@@ -343,6 +361,11 @@ function nodeMouseOut() {
   graphObject.link.style('stroke', "#aaa");
   graphObject.node.style('opacity', 1);
   graphObject.node.style("stroke", "#fff")
+  graphObject.label.transition()
+    .duration(200)
+    .text(function(l) {
+      return crop_title(l.title);
+    })
 }
 
 function ListnodeMouseOver(d) {
@@ -386,7 +409,6 @@ function dragended(d) {
 }
 
 function zoom_actions() {
-  console.log("e")
   if (d3.event.transform.k) {
     d3.event.transform.k = Math.max(Math.min(d3.event.transform.k, 1.5), 0.5)
     prevk = d3.event.transform.k
@@ -398,7 +420,7 @@ function zoom_actions() {
     bb = circle.getBoundingClientRect()
     counter += (bb.x < 0 && bb.y < 0) ? 1 : 0
   }
-  if (counter > (graphObject.node._groups[0].length / 3)){
+  if (counter > (graphObject.node._groups[0].length / 3)) {
     graphObject.resize()
   }
 }
@@ -409,3 +431,7 @@ function zoom_actions_auto() {
 $('#resetGraph').click(function() {
   graphObject.restart()
 });
+
+function crop_title(title) {
+  return title.length > 4 ? title.slice(0, 3) + ".." : title
+}
