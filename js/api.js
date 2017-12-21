@@ -196,7 +196,12 @@ $('#peoplesearch')
       url: url,
       method: 'POST',
       beforeSend: function(settings) {
-        criteria.name = '.*' + settings.urlData.query.toUpperCase() + '.*'
+        console.log(criteria.name);
+        if (criteria.name != '.*') {
+            console.log(criteria.name);
+            deleteCriteriaTag(criteria.name);
+            criteria.name = '.*';
+        }
         settings.data = JSON.stringify({
           "statements": [{
             "statement": "MATCH (p1:People)\
@@ -215,6 +220,8 @@ $('#peoplesearch')
       },
     },
     onSelect: function(result, response) {
+      newCriteriaTag(result.title);
+      criteria.name = result.title;
       peopleGraph(result.title)
     }
   });
@@ -259,6 +266,10 @@ $('#documentsearch')
       url: url,
       method: 'POST',
       beforeSend: function(settings) {
+        if (criteria.document != '.*') {
+            deleteCriteriaTag(criteria.document.substr(2, criteria.document.length - 4));
+        }
+        newCriteriaTag(settings.urlData.query);
         criteria.document = '.*' + settings.urlData.query + '.*';
         settings.data = JSON.stringify({
           "statements": [{
