@@ -128,3 +128,19 @@ It was scrictly better to add markers to build an oriented graph but it is to bu
 We should also reset the brush for the stories.
 
 Obviously we could greatly improve our data set, this is probably the main task that remains and will greatly improve the overall experience.
+
+## Peer reviews
+
+Adrien Moll did not participate to this project. 
+
+Gauthier Jolly (evaluate Florian Billon)
+* Preparation – were they prepared during team meetings? Yes
+* Contribution – did they contribute productively to the team discussion and work? Yes
+* Respect for others’ ideas – did they encourage others to contribute their ideas? Yes
+* Flexibility – were they flexible when disagreements occurred? Yes
+
+Florian Billon (evaluate Gauthier Jolly)
+* Preparation – were they prepared during team meetings? Yes
+* Contribution – did they contribute productively to the team discussion and work? Yes
+* Respect for others’ ideas – did they encourage others to contribute their ideas? Yes
+* Flexibility – were they flexible when disagreements occurred? Yes
