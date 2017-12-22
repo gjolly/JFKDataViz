@@ -124,4 +124,7 @@ The main graph is affected by some position problem when zooming after its initi
 
 It remains some responsive problems, with the time line for example.
 
+It was scrictly better to add markers to build an oriented graph but it is to buggy for now.
+We should also reset the brush for the stories.
+
 Obviously we could greatly improve our data set, this is probably the main task that remains and will greatly improve the overall experience.
