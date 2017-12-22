@@ -6,6 +6,10 @@ body.pushable {
   background: #FFFFFF !important;
 }
 
+.pointer {
+  cursor:pointer;
+}
+
 .ui.menu .item img.logo {
   margin-right: 1.5em;
 }
