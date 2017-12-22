@@ -79,7 +79,7 @@ function addNodes(nodes) {
   divItem.appendChild(divTitle)
   divItem.appendChild(divContent)
   divItem.setAttribute("id", "sidebarPeople")
-  document.getElementById("accordsb").appendChild(divItem);
+  document.getElementById("otherItems").appendChild(divItem);
   $('.ui.accordion.sub').accordion({
     selector: {
       trigger: '.title .qsa'
@@ -99,6 +99,9 @@ function addDocuments(documents) {
     divt.setAttribute("class", "title")
     let divQ = document.createElement("i")
     divQ.setAttribute("class", "qsa")
+    let dropdown = document.createElement("i")
+    dropdown.className = "dropdown icon"
+    divQ.appendChild(dropdown)
     let divCheck = document.createElement("div")
     divCheck.setAttribute("class","ui slider checkbox sb")
     let inputcheck = document.createElement("input")
@@ -159,7 +162,7 @@ function addDocuments(documents) {
   divItem.appendChild(divTitle)
   divItem.appendChild(divContent)
   divItem.setAttribute("id", "sidebarDocument")
-  document.getElementById("accordsb").appendChild(divItem);
+  document.getElementById("otherItems").appendChild(divItem);
   $('.ui.accordion.sub').accordion({
     selector: {
       trigger: '.title .qsa'
@@ -218,7 +221,7 @@ function addAgencies(agencies) {
   divItem.appendChild(divTitle)
   divItem.appendChild(divContent)
   divItem.setAttribute("id", "sidebarAgency")
-  document.getElementById("accordsb").appendChild(divItem);
+  document.getElementById("otherItems").appendChild(divItem);
 }
 
 function addText(node, text) {

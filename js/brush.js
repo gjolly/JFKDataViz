@@ -10,7 +10,7 @@ window.onload = () => {
 
   // set limits
   var x = d3.scaleTime()
-    .domain([new Date(1944, 0, 0), new Date(1974, 0, 0) - 1])
+    .domain([new Date(1944, 0, 0), new Date(1977, 0, 0) - 1])
     .rangeRound([0, width]);
 
   var svg2 = d3.select("#svgB").append("svg")

@@ -29,6 +29,7 @@ body.pushable {
 }
 .ui.sidebar.vertical.menu.left.push.visible{
   background-color: #ECEFF1;
+  width: 15%;
 }
 
 #contentsbar {

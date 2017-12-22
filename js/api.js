@@ -9,6 +9,8 @@ var criteria = {date1: new Date('1900-01-01'),
 var showNone = false;
 var showWhithheld = false;
 
+listAgencies = ['CIA','SEE TITLE','STATE','PRIVATE','CSC','DOS','US Army ','HSCA','1','ARRB','OFFICE OF LEGAL ATTACHE','DOJ','FLA',' MULTIPLE DOCUMENTS.','None','HOUSE','WC','ROCK','INS','SSCIA','OSI','CIT','5','NSA','ARCHIVES','WH','USSS','GSA','CITIZEN','USM-701','NARA','ARMY','OPEN','STAT','4','ONI','SSCSGO','NIS','NAVY','RCMP','BRITISH GOVERNMENT','USCG','FCC','DIA','MINUTEMEN','DIS','11','USMS','ROCKEFELLER COMMISSION','DOD','HSA','OPM','AISC','METROPOLITAN POLICE','DOC','NASA','NSC', 'FBI','SENATE','DOD',' ARMY','FOREIGN POLICE','BRITISH EMBASSY','TREA','AEC','2','DEPT. OF JUSTICE','SSCI','D0S','CHURCH COMMITTEE','DEPT. OF DEFENSE','USAF','NOTAPP','USA','USN','US Army Field Site','JCS','Select Committee�','USIA','WHITE HOUSE'];
+
 function displayWhithheld(checkbox) {
   showWhithheld = checkbox.checked;
   let data = JSON.stringify({
