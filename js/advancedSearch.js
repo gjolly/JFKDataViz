@@ -1,7 +1,7 @@
 $('select.dropdown')
   .dropdown();
 function initAdvanced(){
-   $('.ui.modal').modal('show');
+   $('.ui.modal.advanced').modal('show');
    $('#formAdSe').form('clear');
 }
 $(document).ready(function() {
