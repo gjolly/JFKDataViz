@@ -196,6 +196,7 @@ WHERE"
     "match": "=~"
   }
   let dateSel = false
+  let containsSel = false
   for (let prop of Object.keys(allFields)) {
     if(allFields[prop]){
       let propType = prop.substring(0, prop.length - 1)
@@ -207,6 +208,7 @@ WHERE"
             query += " " + "doc.year"
             dateSel = true
           }
+          containsSel = allFields[prop]=="contains"?true:false
           break;
         case "two":
           query += " " + equivalTwo[allFields[prop]]
@@ -215,7 +217,8 @@ WHERE"
           if (dateSel) {
             query += " " + allFields[prop]
           } else {
-            query += " \"" + allFields[prop] + "\""
+            let valueSearch = containsSel ? allFields[prop].toUpperCase():allFields[prop]
+            query += " \"" + valueSearch + "\""
           }
 
           break;

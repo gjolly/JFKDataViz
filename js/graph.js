@@ -153,6 +153,8 @@ graphObject.showGraph = function(graph, init = true) {
       .on("start", dragstarted)
       .on("drag", dragged)
       .on("end", dragended))
+    .on("mouseover", nodeMouseOver)
+    .on("mouseout", nodeMouseOut)
     .style("text-anchor", "middle")
     .style("fill", "#555")
     .style("font-family", "Arial")
@@ -230,6 +232,8 @@ graphObject.restart = function() {
       .on("start", dragstarted)
       .on("drag", dragged)
       .on("end", dragended))
+    .on("mouseover", nodeMouseOver)
+    .on("mouseout", nodeMouseOut)
     .merge(graphObject.label);
 
   graphObject.link = graphObject.link.data([])
