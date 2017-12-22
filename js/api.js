@@ -6,6 +6,33 @@ var criteria = {date1: new Date('1900-01-01'),
                 name: '.*'
               };
 
+var showNone = false;
+var showWhitheld = false;
+
+function displayWhitheld(checkbox) {
+  showNone = checkbox.checked;
+  let data = JSON.stringify({
+    "statements": [{
+      "statement": researchStatement(),
+      "resultDataContents": ["graph"]
+    }]
+  });
+
+  graphFetch(url, data);
+}
+
+function displayNone(checkbox) {
+  showWhitheld = checkbox.checked;
+  let data = JSON.stringify({
+    "statements": [{
+      "statement": researchStatement(),
+      "resultDataContents": ["graph"]
+    }]
+  });
+
+  graphFetch(url, data);
+}
+
 function researchStatement() {
   let s = "MATCH (p1:People)-[doc:SENDTO]->(p2:People)\
   WHERE (doc.year >= " + criteria.date1.getFullYear() + "\
@@ -16,12 +43,11 @@ function researchStatement() {
   OR toLower(doc.recordNumber) =~ toLower(\"" + criteria.document + "\") \
   OR toLower(doc.title) =~ toLower(\"" + criteria.document + "\")) \
   AND (p2.name =~ \"" + criteria.name + "\" \
-  OR p1.name =~ \"" + criteria.name + "\")\
-  AND p2.name <> \"NONE\" \
-  AND p1.name <> \"NONE\"\
-  AND p1.name <> p2.name \
-  RETURN p1, p2, doc\
-  LIMIT 50;";
+  OR p1.name =~ \"" + criteria.name + "\") \
+  AND p1.name <> p2.name ";
+  s += showNone ? "":"AND p2.name <> \"NONE\" AND p1.name <> \"NONE\" ";
+  s += showWhitheld ? "":"AND p2.name <> \"WHITHELD\" AND p1.name <> \"WHITHELD\" ";
+  s += "RETURN p1, p2, doc LIMIT 50;";
   console.log("Reasearch statement: " + s);
   return s;
 }
@@ -35,6 +61,7 @@ let data = JSON.stringify({
 graphFetch(url, data, first = true);
 
 function graphFetch(url, data, first = false) {
+  console.log(criteria);
   let fetchData = {
     method: 'POST',
     body: data,
@@ -177,6 +204,7 @@ $('#peoplesearch')
           resp = {
             results: {}
           }
+        console.log(resp.results);
         for (obj of apiResponse["results"][0]["data"]) {
           let dobj = obj["graph"]["nodes"][0]
           if (!(dobj["properties"]["agency"] in resp.results)) {
@@ -197,6 +225,7 @@ $('#peoplesearch')
       method: 'POST',
       beforeSend: function(settings) {
         console.log(criteria.name);
+        name = settings.urlData.query;
         if (criteria.name != '.*') {
             console.log(criteria.name);
             deleteCriteriaTag(criteria.name);
@@ -205,7 +234,7 @@ $('#peoplesearch')
         settings.data = JSON.stringify({
           "statements": [{
             "statement": "MATCH (p1:People)\
-            WHERE p1.name =~ \"" + criteria.name + "\"\
+            WHERE p1.name =~ '.*" + name.toUpperCase() + ".*' \
             RETURN p1\
             LIMIT 10;",
             "resultDataContents": ["graph"]
