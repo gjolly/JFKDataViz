@@ -36,7 +36,7 @@ function displayNone(checkbox) {
 function researchStatement() {
   let s = "MATCH (p1:People)-[doc:SENDTO]->(p2:People)\
   WHERE (doc.year >= " + criteria.date1.getFullYear() + "\
-  AND doc.year <= " + criteria.date2.getFullYear() + ") \
+  AND doc.year < " + criteria.date2.getFullYear() + ") \
   AND (toLower(doc.comments) =~ toLower(\"" + criteria.document + "\") \
   OR toLower(doc.fileName) =~ toLower(\"" + criteria.document + "\") \
   OR toLower(doc.fileNum) =~ toLower(\"" + criteria.document + "\") \
