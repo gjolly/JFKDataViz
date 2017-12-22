@@ -1,6 +1,9 @@
 $('select.dropdown')
   .dropdown();
-
+function initAdvanced(){
+   $('.ui.modal').modal('show');
+   $('#formAdSe').form('clear');
+}
 $(document).ready(function() {
   //Sorry for this code if you read this, I would have loved to code something clean
   let maxField = 8;
@@ -32,14 +35,14 @@ function addfields(w, x) {
   let fieldHTML = '<div class="fields">\
         <div class="field">\
           <div class="ui sub header">Logic</div>\
-          <select name="log'+x+'" id="se' + x + '" class="ui fluid search dropdown">\
+          <select name="log' + x + '" id="se' + x + '" class="ui fluid search dropdown">\
         <option value="and">AND</option>\
         <option value="or">OR</option>\
         </select>\
         </div>\
         <div class="field">\
           <div class="ui sub header">Target</div>\
-          <select name="one'+x+'" id="sel' + x + 'a" class="ui fluid search dropdown">\
+          <select name="one' + x + '" id="sel' + x + 'a" class="ui fluid search dropdown">\
           <option value="">Choose a field</option>\
         <option value="p1.name">Sender name</option>\
         <option value="p1.agency">Sender agency</option>\
@@ -57,7 +60,7 @@ function addfields(w, x) {
         </div>\
         <div class="field">\
           <div class="ui sub header">Action</div>\
-          <select name="two'+x+'" id="sel' + x + 'b" class="ui fluid search dropdown">\
+          <select name="two' + x + '" id="sel' + x + 'b" class="ui fluid search dropdown">\
           <option value="">Choose an action</option>\
           </select>\
         </div>\
@@ -66,12 +69,13 @@ function addfields(w, x) {
         <i class="material-icons remove_button" style="vertical-align:middle; color: #F44336;">remove_circle</i>\
       </div>';
   $(w).append(fieldHTML);
+  $('#formAdSe').form()
 }
 
 function majDropdown(value, that) {
   if (that.id.slice(-1) == "a") {
-    let nextid = that.id.substring(0, that.id.length-1) + 'b'
-    let thirdid = that.id.substring(0, that.id.length-1) + 'c'
+    let nextid = that.id.substring(0, that.id.length - 1) + 'b'
+    let thirdid = that.id.substring(0, that.id.length - 1) + 'c'
     if (["p1.name", "p1.agency", "p2.name", "p2.agency", "doc.fileName", "doc.recordNumber", "doc.type",
         "doc.fileNum", "doc.title", "doc.comments"
       ].includes(value)) {
@@ -102,7 +106,7 @@ function majDropdown(value, that) {
       lab.appendChild(document.createTextNode("Value"))
       lab.setAttribute("class", "ui sub header")
       let inp = document.createElement("INPUT");
-      inp.setAttribute("name","textval"+that.id.substring(0, that.id.length-1))
+      inp.setAttribute("name", "textval" + that.id.substring(0, that.id.length - 1))
       y.appendChild(lab)
       y.appendChild(inp)
     } else {
@@ -121,7 +125,7 @@ function majDropdown(value, that) {
       option1.setAttribute("value", "equals")
       option2.setAttribute("value", "gt")
       option3.setAttribute("value", "lt")
-      option3.setAttribute("value", "diff")
+      option4.setAttribute("value", "diff")
       x.add(option)
       x.add(option1)
       x.add(option2)
@@ -141,7 +145,7 @@ function majDropdown(value, that) {
         lab.appendChild(document.createTextNode("Value"))
         lab.setAttribute("class", "ui sub header")
         let inp = document.createElement("input")
-        inp.setAttribute("name","textval"+that.id.substring(0, that.id.length-1))
+        inp.setAttribute("name", "textval" + that.id.substring(0, that.id.length - 1))
         inp.setAttribute("type", "text");
         seconddiv.appendChild(i)
         maindiv.appendChild(lab)
@@ -149,7 +153,8 @@ function majDropdown(value, that) {
         maindiv.appendChild(seconddiv)
         y.appendChild(maindiv)
         $("#" + thirdid + "calendar").calendar({
-          type: 'date'
+          type: 'year',
+          initialDate: new Date(1964, 1)
         });
       } else {
         let lab = document.createElement("LABEL")
@@ -161,6 +166,7 @@ function majDropdown(value, that) {
       }
     }
   }
+  $('#formAdSe').form()
 }
 
 function removeOptions(selectbox) {
@@ -176,38 +182,75 @@ function removeChildren(node) {
     node.removeChild(node.firstChild);
   }
 }
-function valAdSe(){
+
+function valAdSe() {
   $form = $('#formAdSe')
   allFields = $form.form('get values')
   console.log(allFields)
   let query = "MATCH (p1:People)-[doc:SENDTO]->(p2:People) \
 WHERE"
-  let equivalTwo = {"equals":"=","contains":"CONTAINS","diff":"<>","match":"=~"}
-  for(let prop of Object.keys(allFields)){
-    let propType = prop.substring(0, prop.length-1)
-    switch (propType) {
-      case "one":
-        if (allFields[prop]!="date"){
-          query+=" "+allFields[prop]
-        }
-      break;
-      case "two":
-        query+=" "+equivalTwo[allFields[prop]]
-      break;
-      case "textvalsel":
-        query+=" \""+allFields[prop]+"\""
-      break;
-      case "log":
-        query+=" "+allFields[prop]
-      break;
-    }
+  let equivalTwo = {
+    "equals": "=",
+    "contains": "CONTAINS",
+    "diff": "<>",
+    "match": "=~"
   }
-  query+= " RETURN p1,p2,doc LIMIT 200"
+  let dateSel = false
+  for (let prop of Object.keys(allFields)) {
+    if(allFields[prop]){
+      let propType = prop.substring(0, prop.length - 1)
+      switch (propType) {
+        case "one":
+          if (allFields[prop] != "date") {
+            query += " " + allFields[prop]
+          } else {
+            query += " " + "doc.year"
+            dateSel = true
+          }
+          break;
+        case "two":
+          query += " " + equivalTwo[allFields[prop]]
+          break;
+        case "textvalsel":
+          if (dateSel) {
+            query += " " + allFields[prop]
+          } else {
+            query += " \"" + allFields[prop] + "\""
+          }
+
+          break;
+        case "log":
+          query += " " + allFields[prop]
+          break;
+      }
+    }
+
+  }
+  query += " RETURN p1,p2,doc LIMIT 100"
   let data = JSON.stringify({
     "statements": [{
       "statement": query,
       "resultDataContents": ["graph"]
     }]
   })
-  graphFetch('https://dataviz.gauthierjolly.com:8080',data)
+  graphFetch('https://dataviz.gauthierjolly.com:8080', data)
+  document.getElementById('quitAdvanced').style["display"] = "block";
+  document.getElementById('peoplesearch').style["display"] = "none";
+  document.getElementById('documentsearch').style["display"] = "none";
+  document.getElementById('researchCriteria').style["display"] = "none";
+  document.getElementById('svgB').style["display"] = "none";
+}
+function resumeStandard(){
+  document.getElementById('quitAdvanced').style["display"] = "none";
+  document.getElementById('peoplesearch').style["display"] = "block";
+  document.getElementById('documentsearch').style["display"] = "block";
+  document.getElementById('researchCriteria').style["display"] = "block";
+  document.getElementById('svgB').style["display"] = "block";
+  let data = JSON.stringify({
+    "statements": [{
+      "statement": researchStatement(),
+      "resultDataContents": ["graph"]
+    }]
+  })
+  graphFetch(url, data);
 }

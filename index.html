@@ -31,6 +31,9 @@
 
     </p> -->
     <div id="contentsbar">
+      <div id="quitAdvanced" style="display: none;" class="sbarelement">
+        <button class="ui red button" onclick="resumeStandard()">Quit advanced search</button>
+      </div>
       <div class="ui fluid search sbarelement" id="peoplesearch">
         <div class="ui icon input">
           <input class="prompt" placeholder="Search People..." type="text">
@@ -46,13 +49,13 @@
         <div class="results"></div>
       </div>
       <div class="sbarelement">
-        <button class="ui right labeled icon grey button" onclick="$('.ui.modal').modal('show');">
+        <button class="ui right labeled icon grey button" onclick="initAdvanced()">
         <i class="search icon"></i>
           Advanced search
       </button>
       </div>
       <div id="accordsb" class="ui fluid accordion">
-        <div class="item">
+        <div class="item" id="researchCriteria">
           <div class="active title">
             <div class="qs">
               <label>Research criteria</label>

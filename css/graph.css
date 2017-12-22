@@ -30,7 +30,7 @@ div.tooltip {
 .links path {
   stroke: #aaa;
   stroke-opacity: 0.6;
-  stroke-width: 3px;
+  stroke-width: 3;
   fill: none
 }
 

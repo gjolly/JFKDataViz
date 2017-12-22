@@ -41,6 +41,21 @@ graphObject.showGraph = function(graph, init = true) {
       .style("opacity", 0)
       .style("z-index", 100);
 
+    this.svg.append("svg:defs").selectAll("marker")
+      .data(["SENDTO"])
+      .enter().append("svg:marker")
+      .attr("id", String)
+      .attr("viewBox", "0 -5 10 10")
+      .attr("refX", 30)
+      .attr("refY", 0)
+      .attr("markerWidth", 4)
+      .attr("markerHeight", 4)
+      .attr("orient", "auto")
+      .style("fill", "#aaa")
+      .style("stroke", "#aaa")
+      .append("svg:path")
+      .attr("d", "M0,-5L10,0L0,5");
+
   } else {
     this.svg = d3.select("#svgGraph");
     d3.select('#svgGraphContainerG').remove()
@@ -59,11 +74,13 @@ graphObject.showGraph = function(graph, init = true) {
       .attr("markerWidth", 6)
       .attr("markerHeight", 6)
       .attr("orient", "auto")
+      .style("fill", "#aaa")
+      .style("stroke", "#aaa")
       .append("svg:path")
       .attr("d", "M0,-5L10,0L0,5");
   }
   let agencies = new Set()
-  for(n of this.graph.nodes){
+  for (n of this.graph.nodes) {
     agencies.add(n.properties.agency)
   }
   this.agenciesSet = Array.from(agencies)
@@ -90,9 +107,9 @@ graphObject.showGraph = function(graph, init = true) {
     .selectAll("path")
     .data(this.graph.links)
     .enter().append("path")
-  .attr("marker-end", function(d) {
-    return "url(#" + d.type + ")";
-  });
+  // .attr("marker-end", function(d) {
+  //   return "url(#" + d.type + ")";
+  // });
   this.link
     .attr("id", function(d) {
       return "link" + d.linkid
@@ -109,7 +126,9 @@ graphObject.showGraph = function(graph, init = true) {
     .data(this.graph.nodes)
     .enter().append("circle")
     .attr("r", 20)
-    .style("fill", function(d) { return graphObject.color(graphObject.agenciesSet.indexOf(d.properties.agency)); })
+    .style("fill", function(d) {
+      return graphObject.color(graphObject.agenciesSet.indexOf(d.properties.agency));
+    })
     .call(d3.drag()
       .on("start", dragstarted)
       .on("drag", dragged)
@@ -130,6 +149,10 @@ graphObject.showGraph = function(graph, init = true) {
     .text(function(d) {
       return crop_title(d.title);
     })
+    .call(d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended))
     .style("text-anchor", "middle")
     .style("fill", "#555")
     .style("font-family", "Arial")
@@ -142,7 +165,7 @@ graphObject.showGraph = function(graph, init = true) {
 
   this.simulation.force("link")
     .links(this.graph.links)
-    .distance(Math.sqrt(d3.select('#svgA').node().clientWidth ** 2 + d3.select('#svgA').node().clientHeight ** 2) / 8);
+    .distance(Math.sqrt(d3.select('#svgA').node().clientWidth ** 2 + d3.select('#svgA').node().clientHeight ** 2) / 32);
   for (let i = 0, n = Math.ceil(Math.log(graphObject.simulation.alphaMin()) / Math.log(1 - graphObject.simulation.alphaDecay())); i < n; ++i) {
     graphObject.simulation.tick(init = true);
   }
@@ -165,7 +188,7 @@ graphObject.restart = function() {
   graphObject.node = graphObject.node.data([]) //If we remove this line id won't be associated to the good object
   graphObject.node.exit().remove();
   let agencies = new Set()
-  for(n of this.graph.nodes){
+  for (n of this.graph.nodes) {
     agencies.add(n.properties.agency)
   }
   graphObject.color = d3.scaleOrdinal(d3.schemeAccent)
@@ -174,7 +197,9 @@ graphObject.restart = function() {
   graphObject.node = graphObject.node.data(graphObject.graph.nodes)
   graphObject.node = graphObject.node.enter().append("circle")
     .attr("r", 20)
-    .style("fill", function(d) { return graphObject.color(graphObject.agenciesSet.indexOf(d.properties.agency)); })
+    .style("fill", function(d) {
+      return graphObject.color(graphObject.agenciesSet.indexOf(d.properties.agency));
+    })
     .call(d3.drag()
       .on("start", dragstarted)
       .on("drag", dragged)
@@ -201,6 +226,10 @@ graphObject.restart = function() {
     .style("fill", "#555")
     .style("font-family", "Arial")
     .style("font-size", 12)
+    .call(d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended))
     .merge(graphObject.label);
 
   graphObject.link = graphObject.link.data([])
@@ -210,9 +239,9 @@ graphObject.restart = function() {
     .attr("id", function(d) {
       return "link" + d.linkid
     })
-    .attr("marker-end", function(d) {
-      return "url(#" + d.type + ")";
-    })
+    // .attr("marker-end", function(d) {
+    //   return "url(#" + d.type + ")";
+    // })
     .on("mouseover", linkMouseOver)
     .on("mouseout", linkMouseOut)
     .on("Listmouseover", linkMouseOver)
@@ -225,7 +254,7 @@ graphObject.restart = function() {
     .nodes(graphObject.graph.nodes)
   graphObject.simulation.force("link")
     .links(graphObject.graph.links)
-    .distance(Math.sqrt(d3.select('#svgA').node().clientWidth ** 2 + d3.select('#svgA').node().clientHeight ** 2) / 8);
+    .distance(Math.sqrt(d3.select('#svgA').node().clientWidth ** 2 + d3.select('#svgA').node().clientHeight ** 2) / 32);
   graphObject.simulation.alphaTarget(0).restart()
   for (let i = 0, n = Math.ceil(Math.log(graphObject.simulation.alphaMin()) / Math.log(1 - graphObject.simulation.alphaDecay())); i < n; ++i) {
     graphObject.simulation.tick(init = true);
@@ -381,7 +410,7 @@ function nodeMouseOver(d) {
 // Set the stroke width back to normal when mouse leaves the node.
 function nodeMouseOut() {
   graphObject.div.style("opacity", 0);
-  graphObject.link.style('stroke-width', 5);
+  graphObject.link.style('stroke-width', 3);
   graphObject.link.style('stroke', "#aaa");
   graphObject.node.style('opacity', 1);
   graphObject.node.style("stroke", "#fff")
@@ -458,4 +487,28 @@ $('#resetGraph').click(function() {
 
 function crop_title(title) {
   return title.length > 4 ? title.slice(0, 3) + ".." : title
+}
+
+function collide() {
+  for (var k = 0, iterations = 4, strength = 0.5; k < iterations; ++k) {
+    for (var i = 0, n = graphObject.graph.nodes.length; i < n; ++i) {
+      for (var a = graphObject.graph.nodes[i], j = i + 1; j < n; ++j) {
+        var b = graphObject.graph.nodes[j],
+          x = a.x + a.vx - b.x - b.vx,
+          y = a.y + a.vy - b.y - b.vy,
+          lx = Math.abs(x),
+          ly = Math.abs(y),
+          r = a.r + b.r + 10;
+        if (lx < r && ly < r) {
+          if (lx > ly) {
+            lx = (lx - r) * (x < 0 ? -strength : strength);
+            a.vx -= lx, b.vx += lx;
+          } else {
+            ly = (ly - r) * (y < 0 ? -strength : strength);
+            a.vy -= ly, b.vy += ly;
+          }
+        }
+      }
+    }
+  }
 }
