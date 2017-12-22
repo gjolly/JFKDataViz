@@ -7,10 +7,10 @@ var criteria = {date1: new Date('1900-01-01'),
               };
 
 var showNone = false;
-var showWhitheld = false;
+var showWhithheld = false;
 
-function displayWhitheld(checkbox) {
-  showNone = checkbox.checked;
+function displayWhithheld(checkbox) {
+  showWhithheld = checkbox.checked;
   let data = JSON.stringify({
     "statements": [{
       "statement": researchStatement(),
@@ -22,7 +22,7 @@ function displayWhitheld(checkbox) {
 }
 
 function displayNone(checkbox) {
-  showWhitheld = checkbox.checked;
+  showNone = checkbox.checked;
   let data = JSON.stringify({
     "statements": [{
       "statement": researchStatement(),
@@ -46,7 +46,7 @@ function researchStatement() {
   OR p1.name =~ \"" + criteria.name + "\") \
   AND p1.name <> p2.name ";
   s += showNone ? "":"AND p2.name <> \"NONE\" AND p1.name <> \"NONE\" ";
-  s += showWhitheld ? "":"AND p2.name <> \"WHITHELD\" AND p1.name <> \"WHITHELD\" ";
+  s += showWhithheld ? "":"AND p2.name <> \"WHITHELD\" AND p1.name <> \"WHITHELD\" ";
   s += "RETURN p1, p2, doc LIMIT 50;";
   console.log("Reasearch statement: " + s);
   return s;
