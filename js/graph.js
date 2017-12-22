@@ -142,7 +142,7 @@ graphObject.showGraph = function(graph, init = true) {
 
   this.simulation.force("link")
     .links(this.graph.links)
-    .distance(Math.sqrt(d3.select('#svgA').node().clientWidth ** 2 + d3.select('#svgA').node().clientHeight ** 2) / 8);
+    .distance(Math.sqrt(d3.select('#svgA').node().clientWidth ** 2 + d3.select('#svgA').node().clientHeight ** 2) / 32);
   for (let i = 0, n = Math.ceil(Math.log(graphObject.simulation.alphaMin()) / Math.log(1 - graphObject.simulation.alphaDecay())); i < n; ++i) {
     graphObject.simulation.tick(init = true);
   }
@@ -225,7 +225,7 @@ graphObject.restart = function() {
     .nodes(graphObject.graph.nodes)
   graphObject.simulation.force("link")
     .links(graphObject.graph.links)
-    .distance(Math.sqrt(d3.select('#svgA').node().clientWidth ** 2 + d3.select('#svgA').node().clientHeight ** 2) / 8);
+    .distance(Math.sqrt(d3.select('#svgA').node().clientWidth ** 2 + d3.select('#svgA').node().clientHeight ** 2) / 32);
   graphObject.simulation.alphaTarget(0).restart()
   for (let i = 0, n = Math.ceil(Math.log(graphObject.simulation.alphaMin()) / Math.log(1 - graphObject.simulation.alphaDecay())); i < n; ++i) {
     graphObject.simulation.tick(init = true);
