@@ -208,7 +208,7 @@ WHERE"
             query += " " + "doc.year"
             dateSel = true
           }
-          containsSel = allFields[prop]=="contains"?true:false
+          containsSel = allFields[prop]=="match"?true:false
           break;
         case "two":
           query += " " + equivalTwo[allFields[prop]]
@@ -217,7 +217,8 @@ WHERE"
           if (dateSel) {
             query += " " + allFields[prop]
           } else {
-            let valueSearch = containsSel ? allFields[prop].toUpperCase():allFields[prop]
+            let valueSearch = containsSel ? allFields[prop]:allFields[prop].toUpperCase()
+            console.log(valueSearch);
             query += " \"" + valueSearch + "\""
           }
 

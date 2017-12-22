@@ -1,7 +1,7 @@
 const url = 'https://dataviz.gauthierjolly.com:8080';
 // const url = 'http://localhost:7474/db/data/transaction/commit';
 var criteria = {date1: new Date('1900-01-01'),
-                date2: new Date('1970-01-01'),
+                date2: new Date('1978-01-01'),
                 document: '.*',
                 name: '.*'
               };

@@ -1,6 +1,7 @@
 function playStory() {
   $('.basic.slide1.modal')
-    .modal('setting', 'closable', false)
+    .modal('setting', 'closable', true)
+    .modal('keyboardShortcuts', true)
     .modal('show');
 }
 
@@ -31,7 +32,8 @@ function event1() {
 
 function slide2(){
   $('.basic.slide2.modal')
-    .modal('setting', 'closable', false)
+    .modal('setting', 'closable', true)
+    .modal('keyboardShortcuts', true)
     .modal('show');
 }
 
@@ -60,7 +62,8 @@ function event2() {
 
 function slide3(){
   $('.basic.slide3.modal')
-    .modal('setting', 'closable', false)
+    .modal('setting', 'closable', true)
+    .modal('keyboardShortcuts', true)
     .modal('show');
 }
 
@@ -88,8 +91,9 @@ function event3() {
 }
 
 function slide4(){
-  $('.basic.slide3.modal')
-    .modal('setting', 'closable', false)
+  $('.basic.slide4.modal')
+    .modal('setting', 'closable', true)
+    .modal('keyboardShortcuts', true)
     .modal('show');
 }
 
