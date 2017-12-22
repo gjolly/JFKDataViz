@@ -62,6 +62,13 @@ graphObject.showGraph = function(graph, init = true) {
       .append("svg:path")
       .attr("d", "M0,-5L10,0L0,5");
   }
+  let agencies = new Set()
+  for(n of this.graph.nodes){
+    agencies.add(n.properties.agency)
+  }
+  this.agenciesSet = Array.from(agencies)
+  this.color = d3.scaleOrdinal(d3.schemeAccent)
+    .domain(d3.range(this.agenciesSet.length));
 
   this.zoom_handler = d3.zoom()
     .on("zoom", zoom_actions);
@@ -82,10 +89,10 @@ graphObject.showGraph = function(graph, init = true) {
     .attr("class", "links")
     .selectAll("path")
     .data(this.graph.links)
-    .enter().append("path");
-  // .attr("marker-end", function(d) {
-  //   return "url(#" + d.type + ")";
-  // });
+    .enter().append("path")
+  .attr("marker-end", function(d) {
+    return "url(#" + d.type + ")";
+  });
   this.link
     .attr("id", function(d) {
       return "link" + d.linkid
@@ -102,6 +109,7 @@ graphObject.showGraph = function(graph, init = true) {
     .data(this.graph.nodes)
     .enter().append("circle")
     .attr("r", 20)
+    .style("fill", function(d) { return graphObject.color(graphObject.agenciesSet.indexOf(d.properties.agency)); })
     .call(d3.drag()
       .on("start", dragstarted)
       .on("drag", dragged)
@@ -156,9 +164,17 @@ graphObject.isConnected = function(a, b) {
 graphObject.restart = function() {
   graphObject.node = graphObject.node.data([]) //If we remove this line id won't be associated to the good object
   graphObject.node.exit().remove();
+  let agencies = new Set()
+  for(n of this.graph.nodes){
+    agencies.add(n.properties.agency)
+  }
+  graphObject.color = d3.scaleOrdinal(d3.schemeAccent)
+    .domain(d3.range(graphObject.agenciesSet.length));
+  this.agenciesSet = Array.from(agencies)
   graphObject.node = graphObject.node.data(graphObject.graph.nodes)
   graphObject.node = graphObject.node.enter().append("circle")
     .attr("r", 20)
+    .style("fill", function(d) { return graphObject.color(graphObject.agenciesSet.indexOf(d.properties.agency)); })
     .call(d3.drag()
       .on("start", dragstarted)
       .on("drag", dragged)
@@ -193,6 +209,9 @@ graphObject.restart = function() {
   graphObject.link = graphObject.link.enter().append("path")
     .attr("id", function(d) {
       return "link" + d.linkid
+    })
+    .attr("marker-end", function(d) {
+      return "url(#" + d.type + ")";
     })
     .on("mouseover", linkMouseOver)
     .on("mouseout", linkMouseOut)
