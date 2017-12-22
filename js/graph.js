@@ -11,16 +11,16 @@ graphObject.showGraph = function(graph, init = true) {
     graphObject.linkedByIndex[d.source + "," + d.target] = true;
   });
   var set = disjointSet();
-  for(n of this.graph.nodes){
+  for (n of this.graph.nodes) {
     set.add(n)
   }
-  for(l of this.graph.links){
-      set.union(this.graph.nodes.find((e)=>e.id==l.source), this.graph.nodes.find((e)=>e.id==l.target));
+  for (l of this.graph.links) {
+    set.union(this.graph.nodes.find((e) => e.id == l.source), this.graph.nodes.find((e) => e.id == l.target));
   }
   let setnumber = 0
-  for(s of set.extract()){
-    for(n of s){
-      n.setId=setnumber
+  for (s of set.extract()) {
+    for (n of s) {
+      n.setId = setnumber
     }
     setnumber++
   }
@@ -38,7 +38,8 @@ graphObject.showGraph = function(graph, init = true) {
     this.div = d3.select("body").append("div")
       .attr("class", "tooltip")
       .attr("id", "tooltip")
-      .style("opacity", 0);
+      .style("opacity", 0)
+      .style("z-index", 100);
 
   } else {
     this.svg = d3.select("#svgGraph");
@@ -225,6 +226,7 @@ graphObject.ticked = function(init = false) {
     d.y = dy
     return "translate(" + dx + "," + dy + ")";
   });
+
   graphObject.label.attr("x", function(d) {
       return d.x < this.lux ? this.lux + 20 : d.x > this.rdx ? this.rdx - 20 : d.x
     })
@@ -297,11 +299,14 @@ graphObject.resize = function(s = true) {
 
 
 function linkMouseOver(d) {
-  graphObject.div
-    .style("opacity", 1);
+  graphObject.div.transition()
+    .duration(300)
+    .style("opacity", .9);
   graphObject.div.html(d.properties.fileName + "<br/>" + d.properties.day + "/" + d.properties.month + "/" + d.properties.year)
     .style("left", (d3.event.pageX) + "px")
     .style("top", (d3.event.pageY - 28) + "px");
+  let namelength = Math.max(d.properties.fileName.length, 10) + 5
+  d3.select('#tooltip').style("width", namelength + "ch")
   graphObject.link.style('stroke-width', function(l) {
     return d.linkid === l.linkid ? 7 : 2
   })
@@ -309,6 +314,7 @@ function linkMouseOver(d) {
     return d.linkid === l.linkid ? "#faa" : "#aaa"
   })
 }
+
 
 function linkMouseOut(d) {
   graphObject.div.transition()
@@ -331,12 +337,13 @@ function nodeMouseOver(d) {
     .text(function(l) {
       return d.id == l.id ? l.title : crop_title(l.title);
     })
-  graphObject.div.transition()
-    .duration(200)
-    .style("opacity", .9);
+  graphObject.div.style("opacity", .9);
   graphObject.div.html(d.properties.name + "<br/>" + d.properties.agency)
     .style("left", (d3.event.pageX) + "px")
     .style("top", (d3.event.pageY - 28) + "px");
+
+  let namelength = d.properties.agency ? Math.max(d.properties.name.length, d.properties.agency.length) + 5 : d.properties.name.length + 5
+  d3.select('#tooltip').style("width", namelength + "ch")
 
   graphObject.link.style('stroke-width', function(l) {
     if (d === l.source || d === l.target)
@@ -354,9 +361,7 @@ function nodeMouseOver(d) {
 
 // Set the stroke width back to normal when mouse leaves the node.
 function nodeMouseOut() {
-  graphObject.div.transition()
-    .duration(500)
-    .style("opacity", 0);
+  graphObject.div.style("opacity", 0);
   graphObject.link.style('stroke-width', 5);
   graphObject.link.style('stroke', "#aaa");
   graphObject.node.style('opacity', 1);
