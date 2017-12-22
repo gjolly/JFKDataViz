@@ -62,7 +62,7 @@
             </div>
           </div>
           <div class="content active">
-            <div  id="criteria">
+            <div id="criteria">
             </div>
             <div class="ui checkbox">
               <input id="noneOk" type="checkbox" onclick="displayNone(this)">
@@ -74,12 +74,98 @@
             </div>
           </div>
         </div>
+        <div id="otherItems">
+        </div>
+        <div class="item">
 
+        </div>
+      </div>
+      <div class="sbarelement">
+        <button class="ui right labeled icon button green" id="storyBtn" onclick="playStory()">
+            Play Story
+            <i class="play icon" id="storyIcon"></i>
+        </button>
       </div>
     </div>
   </div>
 
-  <div class="ui modal">
+  <div class="ui basic modal slide1">
+    <div class="ui icon header">
+      <i class="archive icon"></i> Welcome to the JFK archives visualization
+    </div>
+    <div class="content">
+      <p>On Friday, November 22, 1963, John Fitzgerald Kennedy, the 35th President of the United States is assassinated.</p>
+      <p>All eyes are on USSR. A document from J. Edgar Hoover, director of the FBI, to Marvin Watson, White House Chef of Staff
+      relates the reaction of the assination by the communist party officials.</p>
+      <br>
+      <br>
+      <p>Click on the link between Hoover and Watson to look at the document...</p>
+    </div>
+    <div class="actions">
+      <div class="ui red basic cancel inverted button">
+        <i class="remove icon"></i> No
+      </div>
+      <div class="ui green ok inverted button" onclick="event1()">
+        <i class="checkmark icon"></i> Yes
+      </div>
+    </div>
+  </div>
+
+  <div class="ui basic modal slide2">
+    <div class="ui icon header">
+      <i class="archive icon"></i>Mexico
+    </div>
+    <div class="content">
+      <p>With those documents, we now know that Oswald went to Mexico. Many documents are releated to Mexico.</p>
+    </div>
+    <div class="actions">
+      <div class="ui red basic cancel inverted button">
+        <i class="remove icon"></i> No
+      </div>
+      <div class="ui green ok inverted button" onclick="event2()">
+        <i class="checkmark icon"></i> Yes
+      </div>
+    </div>
+  </div>
+
+  <div class="ui basic modal slide3">
+    <div class="ui icon header">
+      <i class="archive icon"></i>Oswald FBI informant ?
+    </div>
+    <div class="content">
+      <p>The FBI seemed to closely monitor testimony that the Warren Commission was
+        receiving in early 1964. In one internal memo, in response to testimony that
+        Oswald may have been an FBI informant, an FBI agent staunchly denies that Oswald
+        was ever an informant, lays out the process and tracking of informants.  - The Washington Post</p>
+      </div>
+      <div class="actions">
+        <div class="ui red basic cancel inverted button">
+          <i class="remove icon"></i> No
+        </div>
+        <div class="ui green ok inverted button" onclick="event3()">
+          <i class="checkmark icon"></i> Yes
+        </div>
+      </div>
+    </div>
+    <div class="ui basic modal slide4">
+      <div class="ui icon header">
+        <i class="archive icon"></i>
+      </div>
+      <div class="content">
+        <p>This is the end of this tour. If you want more information on the tools provided by this applications, take a look at
+        the <a href="#">presentation video</a></p>
+        </div>
+        <div class="actions">
+          <div class="ui red basic cancel inverted button">
+            <i class="remove icon"></i> No
+          </div>
+          <div class="ui green ok inverted button" onclick="endStory()">
+            <i class="checkmark icon"></i> Yes
+          </div>
+        </div>
+      </div>
+
+  <div class="ui modal advanced">
     <i class="close icon"></i>
     <div class="header">
       Advanced search
@@ -143,6 +229,7 @@
   <script src="js/brush.js"></script>
   <script src="js/advancedSearch.js"></script>
   <script src="js/disjointSet.js"></script>
+  <script src="js/story.js"></script>
 </body>
 
 </html>

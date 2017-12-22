@@ -41,5 +41,7 @@ function deleteCriteria(crit) {
 
 function deleteCriteriaTag(criteriaName){
   let crit = document.getElementById(criteriaName);
-  crit.parentNode.removeChild(crit);
+  if (crit) {
+    crit.parentNode.removeChild(crit);
+  }
 }

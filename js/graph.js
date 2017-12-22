@@ -79,11 +79,7 @@ graphObject.showGraph = function(graph, init = true) {
       .append("svg:path")
       .attr("d", "M0,-5L10,0L0,5");
   }
-  let agencies = new Set()
-  for (n of this.graph.nodes) {
-    agencies.add(n.properties.agency)
-  }
-  this.agenciesSet = Array.from(agencies)
+  this.agenciesSet = listAgencies;
   this.color = d3.scaleOrdinal(d3.schemeAccent)
     .domain(d3.range(this.agenciesSet.length));
 
@@ -127,8 +123,12 @@ graphObject.showGraph = function(graph, init = true) {
     .enter().append("circle")
     .attr("r", 20)
     .style("fill", function(d) {
-      return graphObject.color(graphObject.agenciesSet.indexOf(d.properties.agency));
-    })
+        if (d.properties.agency) {
+          return d3.interpolateRdYlBu(graphObject.agenciesSet.indexOf(d.properties.agency)/(2*graphObject.agenciesSet.length)+0.25);
+        } else {
+          return '#e0e0e0';
+        };
+      })
     .call(d3.drag()
       .on("start", dragstarted)
       .on("drag", dragged)
@@ -189,18 +189,17 @@ graphObject.isConnected = function(a, b) {
 graphObject.restart = function() {
   graphObject.node = graphObject.node.data([]) //If we remove this line id won't be associated to the good object
   graphObject.node.exit().remove();
-  let agencies = new Set()
-  for (n of this.graph.nodes) {
-    agencies.add(n.properties.agency)
-  }
   graphObject.color = d3.scaleOrdinal(d3.schemeAccent)
     .domain(d3.range(graphObject.agenciesSet.length));
-  this.agenciesSet = Array.from(agencies)
   graphObject.node = graphObject.node.data(graphObject.graph.nodes)
   graphObject.node = graphObject.node.enter().append("circle")
     .attr("r", 20)
     .style("fill", function(d) {
-      return graphObject.color(graphObject.agenciesSet.indexOf(d.properties.agency));
+      if (d.properties.agency) {
+        return d3.interpolateRdYlBu(graphObject.agenciesSet.indexOf(d.properties.agency)/(2*graphObject.agenciesSet.length)+0.25);
+      } else {
+        return '#e0e0e0';
+      };
     })
     .call(d3.drag()
       .on("start", dragstarted)
